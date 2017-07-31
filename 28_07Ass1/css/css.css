@@ -1,0 +1,17 @@
+html {
+  background-color: #f39696;
+}
+
+.homePageButtons{
+  width: 50%;
+  left: 25%;
+  text-align: center;
+  cursor: pointer;
+  padding: 10px 0px 10px 0px;
+}
+
+.monthImages {
+  float:right; 
+  margin-top:5px;
+  margin-right:10px;
+}
