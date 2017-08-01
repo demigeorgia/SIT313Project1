@@ -749,6 +749,9 @@
               todaysFeelings = "";
             }
           } // changes what's printed in each element depending on what day it is
+          else if (count == currentDate && selectedMonth == currentMonth){
+            todaysEvent = "TODAY";
+          }
           else if (count == 1 && selectedMonth == 0){
             todaysEvent = "NEW YEARS DAY";
           }
