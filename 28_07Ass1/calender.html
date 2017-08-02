@@ -679,6 +679,7 @@
           var todaysEvent = "";
           var todaysImage = "";
           var todaysFeelings = "";
+          var todaysPrint = "";
 
           //checks if the events array is defined and the event is defined
           if (page.data.events != undefined && eventArray[elementPosition] != undefined) {
@@ -750,7 +751,8 @@
             }
           } // changes what's printed in each element depending on what day it is
           else if (count == currentDate && selectedMonth == currentMonth){
-            todaysEvent = "TODAY";
+            todaysPrint = "TODAY";
+            todaysEvent = "NONE";
           }
           else if (count == 1 && selectedMonth == 0){
             todaysEvent = "NEW YEARS DAY";
@@ -830,7 +832,7 @@
           }
 
           //creates list item with the selected values
-          table += '<ul style="background-color:'+ colour +'; height: 170px;" class="list list--material"><li class="list__header list__header--material" style"65%;">'+ daysOfTheWeek[weekDay] + ' ' + count + '</li><li class="list__item list__item--material"><div class="list__item--material__center" style="padding: 12px 6px 0px 0px; width:100%;"><div class="list__item__title list__item--material__title"></div><div class="list__item__subtitle list__item--material__ subtitle" style="font-size:12px;" id="' + month[selectedMonth] + count +'">EVENT:<br>'+ todaysEvent + '<br>' + todaysFeelings + '<br>' + todaysImage +'</div></div></div></li></ul>';
+          table += '<ul style="background-color:'+ colour +'; height: 170px;" class="list list--material"><li class="list__header list__header--material" style"65%;">'+ daysOfTheWeek[weekDay] + ' ' + count + ' ' + todaysPrint + '</li><li class="list__item list__item--material"><div class="list__item--material__center" style="padding: 12px 6px 0px 0px; width:100%;"><div class="list__item__title list__item--material__title"></div><div class="list__item__subtitle list__item--material__ subtitle" style="font-size:12px;" id="' + month[selectedMonth] + count +'">EVENT:<br>'+ todaysEvent + '<br>' + todaysFeelings + '<br>' + todaysImage +'</div></div></div></li></ul>';
 
           table += '</td>';
 
