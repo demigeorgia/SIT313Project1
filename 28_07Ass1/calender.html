@@ -784,14 +784,14 @@
           }
           else if (count == 1 && selectedMonth == 4){
             todaysEvent = "EASTER SUNDAY";
-            todaysImage = '<img src="images/egg.png" alt="Easter Egg" class="monthImages" style="height:55px;margin-top:-10px;">';
+            todaysImage = '<img src="images/egg.png" alt="Easter Egg" class="monthImages" style="height:55px;margin-top:-5px;">';
           }
           else if (count == 2 && selectedMonth == 4){
             todaysEvent = "EASTER MONDAY";
           }
           else if ((count == 2 || count == 9 || count == 16 ) && selectedMonth == 7){
             todaysEvent = "WINTER NIGHT MARKET";
-            todaysImage = '<img src="images/market.png" alt="Strawberries" class="monthImages" style="height:50px;">';
+            todaysImage = '<img src="images/market.png" alt="Strawberries" class="monthImages" style="height:50px;margin-top:-10px;">';
           }
           else if ((count == 1 || count == 2 || count == 3 || count == 4 || count == 5 || count == 6 || count == 7 || count == 8) && selectedMonth == 8){
             todaysEvent = "SPRING FASHION WEEK";
@@ -799,7 +799,7 @@
           }
           else if ((count == 20 || count == 21 || count == 22) && selectedMonth == 9){
             todaysEvent = "AUSTRALIAN MOTORCYCLE GRAND PRIX";
-            todaysImage = '<img src="images/bike.png" alt="Motorbike" class="monthImages" style="height:50px;">';
+            todaysImage = '<img src="images/bike.png" alt="Motorbike" class="monthImages" style="height:50px; margin-top:-3px; margin-right:0px;">';
           }
           else if (count == 31 && selectedMonth == 9){
             todaysEvent = "HALLOWEEN";
@@ -807,11 +807,11 @@
           }
           else if (count == 4 && selectedMonth == 10){
             todaysEvent = "SPRING RACING CARNIVAL";
-            todaysImage = '<img src="images/horse.png" alt="Running Horse" class="monthImages" style="height:50px;">';
+            todaysImage = '<img src="images/horse.png" alt="Running Horse" class="monthImages" style="height:46px;margin-top:-3px;">';
           }
           else if (count == 7 && selectedMonth == 10){
             todaysEvent = "MELBOURNE CUP";
-            todaysImage = '<img src="images/horse.png" alt="Running Horse" class="monthImages" style="height:50px;">';
+            todaysImage = '<img src="images/horse.png" alt="Running Horse" class="monthImages" style="height:46px;">';
           }
           else if (count == 24 && selectedMonth == 11){
             todaysEvent = "CHRISTMAS EVE";
@@ -889,7 +889,7 @@
 
   <style>
     @font-face { font-family: JandaHappyDay; src: url('fonts/JandaHappyDay.ttf'); }
-    headingStyle { font-size: 50px; font-family: JandaHappyDay, sans-serif; color: #333;}
+    headingStyle { font-size: 35px; font-family: JandaHappyDay, sans-serif; color: #333;}
   </style>
 
   </head>
@@ -906,13 +906,12 @@
       <p style="padding-left: 20px;">
         <div style="padding-top: 20px; padding-bottom: 20px; text-align:center;">
           <!-- Page heading -->
-          <headingStyle style="font-size: 50px;">2018 Calender</headingStyle><br><br>
+          <headingStyle style="font-size: 35px;">2018 Calender</headingStyle><br><br>
         </div>
         <div style="left: 0px; top: 0px; border-top: 1px solid black; width: 100%; height: auto; padding-bottom:20px; background-color: white;">
         <!-- Page introduction -->
         <div style="text-align: center; font-size: 16px; padding: 0px 30px;">
           <br>
-
             <headingStyle style="font-size: 16px;" id="todaysDate"></headingStyle><br><br>
           Keep track of upcoming events in Melbourne and Australia using this online<br>easy to use 2018 Calender.
         </div>
@@ -939,7 +938,7 @@
       <p style="padding-left:5px; padding-right:5px;">
         <div style="padding-top: 20px; padding-left: 20px; text-align:center;">
           <!-- Page heading -->
-          <headingStyle id="displayMonth" style="font-size: 50px;"></headingStyle>
+          <headingStyle id="displayMonth" style="font-size: 35px;"></headingStyle>
         </div>
       </p>
       <!-- Displays days in the current selected month in a table -->
@@ -961,7 +960,7 @@
       <p style="padding-left:5px; padding-right:5px;">
         <div style="padding-top: 20px; padding-left: 20px; text-align:center;">
           <!-- Page heading -->
-          <headingStyle id="displayMonthDay" style="font-size: 50px;"></headingStyle>
+          <headingStyle id="displayMonthDay" style="font-size: 35px;"></headingStyle>
         </div>
       </p>
       <!-- Displays a list of days in the current selected month -->
