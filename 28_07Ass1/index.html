@@ -8,64 +8,42 @@
   <style>
     @font-face { font-family: JandaHappyDay; src: url('fonts/JandaHappyDay.ttf'); }
     headingStyle { font-size: 60px; font-family: JandaHappyDay, sans-serif; color: white;}
+    
     .topBox {
       top:0px;
       left:0px;
       position: absolute;
       width: 100%;
-      height: 10%;
-      background-color: lightblue;
-      opacity: 1;
-    }
-    .topBoxTwo {
-      top:10%;
-      left:0px;
-      position: absolute;
-      width: 100%;
-      height: 10%;
-      background-color: #e8f4f8;
+      height: 44px;
+      background-color: #4d4d4d;
       opacity: 1;
     }
     .headingBox {
       top:50%;
       margin-top: -100px;
       left:50%;
-      margin-left: -222px;
+      margin-left: -225px;
       position: absolute;
       width: auto;
       height: 120px;
     }
     .bottomBox {
-      top:80%;
       left:0px;
       position: absolute;
       width: 100%;
-      bottom:10%;
-      background-color: #d1e0d6;
-      opacity: 1;
-    }
-    .bottomBoxTwo {
-      top:90%;
-      left:0px;
-      position: absolute;
-      width: 100%;
+      height: 44px;
       bottom:0px;
-      background-color: #a3c1ad;
+      background-color: #4d4d4d;
       opacity: 1;
     }
   </style>
 </head>
-<body onload="setTimeout(function(){window.location = 'Calender.html';}, 5000)"> <!---->
+<body onload="setTimeout(function(){window.location = 'Calender.html';}, 4000)"> 
   <div class="topBox"></div>
-  <div class="topBoxTwo"></div>
   <div class="headingBox"style="color:white; text-align:center;">
-    <headingStyle>2018 Calender</headingStyle><br><br>
+    <headingStyle>2018 Calender</headingStyle><br>
+    <headingStyle style="font-size:20px;">Created By Demi Brauer</headingStyle>
   </div>
-  <div class="bottomBox">
-    <div class="progress-bar progress-bar--indeterminate">
-      <div class="progress-bar__primary"></div>
-    </div>
-  </div>
-  <div class="bottomBoxTwo"></div>
+  <div class="bottomBox"></div>
 </body>
 </html>
