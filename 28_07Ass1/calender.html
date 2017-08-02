@@ -36,77 +36,91 @@
     var dates = [];
     var dayCount = 0;
     var dayCountTwo = 1;
+    
+    //THEME COLOUS
+    var lighterblue = "#e8f4f8";
+    var lightergreen = "#d1e0d6";
+    var lighterpink = "#fbdbdb";
+
+    var darkerblue = "lightblue";
+    var darkergreen = "#a3c1ad";
+    var darkerpink = "#f39696";
+
+    var hash = "#";
+
+    var block = 'block';
+    var none = 'none';
 
     // Creates click events name for each day in the list and stores in array
     for (var i = 1; i < 366; i++) {
       if (dayCount < 31){ //JAN
-        dates[dayCount] = "#" + month[0] + dayCountTwo;
+        dates[dayCount] = hash + month[0] + dayCountTwo;
       }
       else if (dayCount < 59){ //FEB
         if (dayCount == 31){
           dayCountTwo = 1;
         }
-        dates[dayCount] = "#" + month[1] + dayCountTwo;
+        dates[dayCount] = hash + month[1] + dayCountTwo;
       }
       else if (dayCount < 90){ //MAR
         if (dayCount == 59){
           dayCountTwo = 1;
         }
-        dates[dayCount] = "#" + month[2] + dayCountTwo;
+        dates[dayCount] = hash + month[2] + dayCountTwo;
       }
       else if (dayCount < 120){ //APR
         if (dayCount == 90){
           dayCountTwo = 1;
         }
-        dates[dayCount] = "#" + month[3] + dayCountTwo;
+        dates[dayCount] = hash + month[3] + dayCountTwo;
       }
       else if (dayCount < 151){ //MAY
         if (dayCount == 120){
           dayCountTwo = 1;
         }
-        dates[dayCount] = "#" + month[4] + dayCountTwo;
+        dates[dayCount] = hash + month[4] + dayCountTwo;
       }
       else if (dayCount < 181){ //JUN
         if (dayCount == 151){
           dayCountTwo = 1;
         }
-        dates[dayCount] = "#" + month[5] + dayCountTwo;
+        dates[dayCount] = hash + month[5] + dayCountTwo;
       }
       else if (dayCount < 212){ //JUL
         if (dayCount == 181){
           dayCountTwo = 1;
         }
-        dates[dayCount] = "#" + month[6] + dayCountTwo;
+        dates[dayCount] = hash + month[6] + dayCountTwo;
       }
       else if (dayCount < 243){ //AUG
         if (dayCount == 212){
           dayCountTwo = 1;
         }
-        dates[dayCount] = "#" + month[7] + dayCountTwo;
+        dates[dayCount] = hash + month[7] + dayCountTwo;
       }
       else if (dayCount < 273){ //SEP
         if (dayCount == 243){
           dayCountTwo = 1;
         }
-        dates[dayCount] = "#" + month[8] + dayCountTwo;
+        dates[dayCount] = hash + month[8] + dayCountTwo;
       }
       else if (dayCount < 304){ //OCT
         if (dayCount == 273){
           dayCountTwo = 1;
         }
-        dates[dayCount] = "#" + month[9] + dayCountTwo;
+        dates[dayCount] = hash + month[9] + dayCountTwo;
       }
       else if (dayCount < 334){ //NOV
         if (dayCount == 304){
           dayCountTwo = 1;
         }
-        dates[dayCount] = "#" + month[10] + dayCountTwo;
+        dates[dayCount] = hash + month[10] + dayCountTwo;
       }
       else { //DEC
         if (dayCount == 334){
           dayCountTwo = 1;
         }
-        dates[dayCount] = "#" + month[11] + dayCountTwo;
+        dates[dayCount] = hash + month[11] + dayCountTwo;
       }
       dayCount++;
       dayCountTwo++;
@@ -255,21 +269,17 @@
 
       var colourCount = 0;
 
-      if (theme == "pink"){
-        selectedColour = "#fbdbdb";
-        document.body.style.backgroundColor = "#f39696";
-      }
-      else if (theme == "blue"){
-        selectedColour = "#e8f4f8";
-        document.body.style.backgroundColor = "lightblue"
+      if (theme == "blue"){
+        selectedColour = lighterblue;
+        document.body.style.backgroundColor = darkerblue;
       }
       else if (theme == "green"){
-        selectedColour = "#d1e0d6";
-        document.body.style.backgroundColor = "#a3c1ad";
+        selectedColour = lightergreen;
+        document.body.style.backgroundColor = darkergreen;
       }
       else {
-        selectedColour = "#fbdbdb";
-        document.body.style.backgroundColor = "#f39696";
+        selectedColour = lighterpink;
+        document.body.style.backgroundColor = darkerpink;
       }
 
       // Finds out how many days there are in the selected month
@@ -455,21 +465,21 @@
           page.querySelector('#dialogBox2').innerHTML = '<div id="hideDayDialogBox" class="alert-dialog-mask"></div><div id="hideDayDialogBox2" class="alert-dialog"><div id="hideDayDialogBox3" class="alert-dialog-container"><div id="hideDayDialogBox4" class="alert-dialog-content">You cannot go back,<br>January is the first month.</div><div id="hideDayDialogBox5" class="alert-dialog-footer"><button id="okButton3" class="alert-dialog-button">Ok</button></div></div></div>';
 
           //Displays hidden dialog box
-          document.querySelector('#hideDayDialogBox').style.display = 'block';
-          document.querySelector('#hideDayDialogBox2').style.display = 'block';
-          document.querySelector('#hideDayDialogBox3').style.display = 'block';
-          document.querySelector('#hideDayDialogBox4').style.display = 'block';
-          document.querySelector('#hideDayDialogBox5').style.display = 'block';
-          document.querySelector('#okButton3').style.display = 'block';
+          document.querySelector('#hideDayDialogBox').style.display = block;
+          document.querySelector('#hideDayDialogBox2').style.display = block;
+          document.querySelector('#hideDayDialogBox3').style.display = block;
+          document.querySelector('#hideDayDialogBox4').style.display = block;
+          document.querySelector('#hideDayDialogBox5').style.display = block;
+          document.querySelector('#okButton3').style.display = block;
 
           page.querySelector('#okButton3').onclick = function() {
             //Hides dialog box
-            document.querySelector('#hideDayDialogBox').style.display = 'none';
-            document.querySelector('#hideDayDialogBox2').style.display = 'none';
-            document.querySelector('#hideDayDialogBox3').style.display = 'none';
-            document.querySelector('#hideDayDialogBox4').style.display = 'none';
-            document.querySelector('#hideDayDialogBox5').style.display = 'none';
-            document.querySelector('#okButton3').style.display = 'none';
+            document.querySelector('#hideDayDialogBox').style.display = none;
+            document.querySelector('#hideDayDialogBox2').style.display = none;
+            document.querySelector('#hideDayDialogBox3').style.display = none;
+            document.querySelector('#hideDayDialogBox4').style.display = none;
+            document.querySelector('#hideDayDialogBox5').style.display = none;
+            document.querySelector('#okButton3').style.display = none;
           };
         }
       };
@@ -485,21 +495,21 @@
           page.querySelector('#dialogBox2').innerHTML = '<div id="hideDayDialogBox6" class="alert-dialog-mask"></div><div id="hideDayDialogBox7" class="alert-dialog"><div id="hideDayDialogBox8" class="alert-dialog-container"><div id="hideDayDialogBox9" class="alert-dialog-content">You cannot go back,<br>January is the first month.</div><div id="hideDayDialogBox10" class="alert-dialog-footer"><button id="okButton4" class="alert-dialog-button">Ok</button></div></div></div>';
 
           //Displays hidden dialog box
-          document.querySelector('#hideDayDialogBox6').style.display = 'block';
-          document.querySelector('#hideDayDialogBox7').style.display = 'block';
-          document.querySelector('#hideDayDialogBox8').style.display = 'block';
-          document.querySelector('#hideDayDialogBox9').style.display = 'block';
-          document.querySelector('#hideDayDialogBox10').style.display = 'block';
-          document.querySelector('#okButton4').style.display = 'block';
+          document.querySelector('#hideDayDialogBox6').style.display = block;
+          document.querySelector('#hideDayDialogBox7').style.display = block;
+          document.querySelector('#hideDayDialogBox8').style.display = block;
+          document.querySelector('#hideDayDialogBox9').style.display = block;
+          document.querySelector('#hideDayDialogBox10').style.display = block;
+          document.querySelector('#okButton4').style.display = block;
 
           page.querySelector('#okButton4').onclick = function() {
             //Hides dialog box
-            document.querySelector('#hideDayDialogBox6').style.display = 'none';
-            document.querySelector('#hideDayDialogBox7').style.display = 'none';
-            document.querySelector('#hideDayDialogBox8').style.display = 'none';
-            document.querySelector('#hideDayDialogBox9').style.display = 'none';
-            document.querySelector('#hideDayDialogBox10').style.display = 'none';
-            document.querySelector('#okButton4').style.display = 'none';
+            document.querySelector('#hideDayDialogBox6').style.display = none;
+            document.querySelector('#hideDayDialogBox7').style.display = none;
+            document.querySelector('#hideDayDialogBox8').style.display = none;
+            document.querySelector('#hideDayDialogBox9').style.display = none;
+            document.querySelector('#hideDayDialogBox10').style.display = none;
+            document.querySelector('#okButton4').style.display = none;
           };
         }
       };
@@ -524,21 +534,21 @@
           page.querySelector('#dialogBox').innerHTML = '<div id="hideDialogBox" class="alert-dialog-mask"></div><div id="hideDialogBox2" class="alert-dialog"><div id="hideDialogBox3" class="alert-dialog-container"><div id="hideDialogBox4" class="alert-dialog-content">You cannot go back,<br>January is the first month.</div><div id="hideDialogBox5" class="alert-dialog-footer"><button id="okButton" class="alert-dialog-button">Ok</button></div></div></div>';
 
           //Displays hidden dialog box
-          document.querySelector('#hideDialogBox').style.display = 'block';
-          document.querySelector('#hideDialogBox2').style.display = 'block';
-          document.querySelector('#hideDialogBox3').style.display = 'block';
-          document.querySelector('#hideDialogBox4').style.display = 'block';
-          document.querySelector('#hideDialogBox5').style.display = 'block';
-          document.querySelector('#okButton').style.display = 'block';
+          document.querySelector('#hideDialogBox').style.display = block;
+          document.querySelector('#hideDialogBox2').style.display = block;
+          document.querySelector('#hideDialogBox3').style.display = block;
+          document.querySelector('#hideDialogBox4').style.display = block;
+          document.querySelector('#hideDialogBox5').style.display = block;
+          document.querySelector('#okButton').style.display = block;
 
           page.querySelector('#okButton').onclick = function() {
             //Hides dialog box
-            document.querySelector('#hideDialogBox').style.display = 'none';
-            document.querySelector('#hideDialogBox2').style.display = 'none';
-            document.querySelector('#hideDialogBox3').style.display = 'none';
-            document.querySelector('#hideDialogBox4').style.display = 'none';
-            document.querySelector('#hideDialogBox5').style.display = 'none';
-            document.querySelector('#okButton').style.display = 'none';
+            document.querySelector('#hideDialogBox').style.display = none;
+            document.querySelector('#hideDialogBox2').style.display = none;
+            document.querySelector('#hideDialogBox3').style.display = none;
+            document.querySelector('#hideDialogBox4').style.display = none;
+            document.querySelector('#hideDialogBox5').style.display = none;
+            document.querySelector('#okButton').style.display = none;
           };
         }
       };
@@ -554,21 +564,21 @@
           page.querySelector('#dialogBox').innerHTML = '<div id="hideDialogBox6" class="alert-dialog-mask"></div><div id="hideDialogBox7" class="alert-dialog"><div id="hideDialogBox8" class="alert-dialog-container"><div id="hideDialogBox9" class="alert-dialog-content">You cannot go forward,<br>December is the last month.</div><div id="hideDialogBox10" class="alert-dialog-footer"><button id="okButton2" class="alert-dialog-button">Ok</button></div></div></div>';
 
           //Displays hidden dialog box
-          document.querySelector('#hideDialogBox6').style.display = 'block';
-          document.querySelector('#hideDialogBox7').style.display = 'block';
-          document.querySelector('#hideDialogBox8').style.display = 'block';
-          document.querySelector('#hideDialogBox9').style.display = 'block';
-          document.querySelector('#hideDialogBox10').style.display = 'block';
-          document.querySelector('#okButton2').style.display = 'block';
+          document.querySelector('#hideDialogBox6').style.display = block;
+          document.querySelector('#hideDialogBox7').style.display = block;
+          document.querySelector('#hideDialogBox8').style.display = block;
+          document.querySelector('#hideDialogBox9').style.display = block;
+          document.querySelector('#hideDialogBox10').style.display = block;
+          document.querySelector('#okButton2').style.display = block;
 
           page.querySelector('#okButton2').onclick = function() {
             //Hides dialog box
-            document.querySelector('#hideDialogBox6').style.display = 'none';
-            document.querySelector('#hideDialogBox7').style.display = 'none';
-            document.querySelector('#hideDialogBox8').style.display = 'none';
-            document.querySelector('#hideDialogBox9').style.display = 'none';
-            document.querySelector('#hideDialogBox10').style.display = 'none';
-            document.querySelector('#okButton2').style.display = 'none';
+            document.querySelector('#hideDialogBox6').style.display = none;
+            document.querySelector('#hideDialogBox7').style.display = none;
+            document.querySelector('#hideDialogBox8').style.display = none;
+            document.querySelector('#hideDialogBox9').style.display = none;
+            document.querySelector('#hideDialogBox10').style.display = none;
+            document.querySelector('#okButton2').style.display = none;
           };
         }
       };
@@ -582,21 +592,17 @@
       };
 
       //Changs the backgroundColor and table/list colour depending on theme
-      if (theme == "pink"){
-        selectedColour = "#fbdbdb";
-        document.body.style.backgroundColor = "#f39696";
-      }
-      else if (theme == "blue"){
-        selectedColour = "#e8f4f8";
-        document.body.style.backgroundColor = "lightblue"
+      if (theme == "blue"){
+        selectedColour = lighterblue;
+        document.body.style.backgroundColor = darkerblue;
       }
       else if (theme == "green"){
-        selectedColour = "#d1e0d6";
-        document.body.style.backgroundColor = "#a3c1ad";
+        selectedColour = lightergreen;
+        document.body.style.backgroundColor = darkergreen;
       }
       else {
-        selectedColour = "#fbdbdb";
-        document.body.style.backgroundColor = "#f39696";
+        selectedColour = lighterpink;
+        document.body.style.backgroundColor = darkerpink;
       }
 
       var selectedMonth = currentMonth;
