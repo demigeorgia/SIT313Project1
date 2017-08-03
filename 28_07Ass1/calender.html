@@ -157,6 +157,10 @@
       page.querySelector('#storeInDb').innerHTML += '<div style="padding-left: 4%; padding-bottom: 10px; padding-top: 20px;">Is there any important event on today? (14 character limit)</div>';
       page.querySelector('#storeInDb').innerHTML += '<input type="text" style="width:92%; margin-left:4%;" id="textInputThree" name="textInputThree" class="text-input--underbar" maxlength="14">';
 
+      // Creates select box and sub heading
+      page.querySelector('#storeInDb').innerHTML += '<div style="padding-left: 4%; padding-bottom: 10px; padding-top: 20px;">Would you like to include an image?</div>';
+      page.querySelector('#storeInDb').innerHTML += '<ons-select style="padding-left: 4%; padding-bottom: 10px; padding-top: 20px;" id="choose-sel" ><option value="0">No image</option><option value="1">Heart</option><option value="2">Horse</option><option value="3">Model</option><option value="4">Movie Camera</option></ons-select><br><br>';
+      
       // Creates button which links loads storeCalanderEdit.php to store data inputted
       page.querySelector('#storeInDb').innerHTML += '<input id="selectButton" class="button" type="submit" value="Submit" style="width: 60%; left: 20%; text-align: center; top: 20px; margin-bottom:20px;">';
 
@@ -164,10 +168,28 @@
       page.querySelector('#selectButton').onclick = function() {
         var input = page.querySelector('#textInputThree').value;
         var feeling = page.querySelector('#textInputTwo').value;
+        
+        var image = '';
+        var dropdown = page.querySelector('#choose-sel').value;
+        if (dropdown == '1'){
+          image = '<img src="images/heart.png" alt="Heart" class="monthImages" style="height:55px; margin-top:-10px;">';
+        }
+        else if (dropdown == '2'){
+          image = '<img src="images/horse.png" alt="Horse" class="monthImages" style="height:50px;">';
+        }
+        else if (dropdown == '3'){
+          image = '<img src="images/fashion.png" alt="Model" class="monthImages" style="height:55px; margin-top:-15px;">';
+        }
+        else if (dropdown == '4'){
+          image = '<img src="images/film.png" alt="Movie Camera" class="monthImages" style="height:40px;">';
+        }
+        
         var joined = input.concat(','); // adds , to end of input
         joined = joined.concat(store); //adds store to end of joined
         joined = joined.concat(','); // adds , to end of joined
         joined = joined.concat(feeling); // adds feeling to end of joined
+        joined = joined.concat(','); // adds , to end of joined
+        joined = joined.concat(image); // adds image to end of joined
         var test = true;
 
         //Checks if event for a day is already inputted
@@ -178,7 +200,9 @@
             var joined = input.concat(',');
             joined = joined.concat(store);
             joined = joined.concat(',');
-            eventArray[i] = joined.concat(feeling);
+            joined = joined.concat(feeling);
+            joined = joined.concat(','); // adds , to end of joined
+            eventArray[i] = joined.concat(image);
             test = false;
             break;
           }
@@ -741,6 +765,7 @@
           //displays data stored in eventArray
           //checks if event in array exists for this day
           if (count == inputDay && selectedMonth == inputMonthTnt){
+            
             if (eventSplit[0] != ''){
               todaysEvent = eventSplit[0].toUpperCase();
             }
@@ -748,6 +773,7 @@
               //sets to default text
               todaysEvent = "NONE";
             }
+            
             if (eventSplit[2] != '') {
               todaysFeelings = '<br>FEELING TODAY:<br>' + eventSplit[2].toUpperCase();
             }
@@ -755,6 +781,14 @@
               //prints nothing
               todaysFeelings = "";
             }
+            
+            if (eventSplit[3] != ''){
+              todaysImage = eventSplit[3];
+            }
+            else {
+              todaysImage = '';
+            }
+            
           } // changes what's printed in each element depending on what day it is
           else if (count == currentDate && selectedMonth == currentMonth){
             todaysPrint = "TODAY";
