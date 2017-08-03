@@ -171,48 +171,73 @@
         
         var image = '';
         var dropdown = page.querySelector('#choose-sel').value;
-        if (dropdown == '1'){
-          image = '<img src="images/heart.png" alt="Heart" class="monthImages" style="height:55px; margin-top:-10px;">';
-        }
-        else if (dropdown == '2'){
-          image = '<img src="images/horse.png" alt="Horse" class="monthImages" style="height:50px;">';
-        }
-        else if (dropdown == '3'){
-          image = '<img src="images/fashion.png" alt="Model" class="monthImages" style="height:55px; margin-top:-15px;">';
-        }
-        else if (dropdown == '4'){
-          image = '<img src="images/film.png" alt="Movie Camera" class="monthImages" style="height:40px;">';
-        }
         
-        var joined = input.concat(','); // adds , to end of input
-        joined = joined.concat(store); //adds store to end of joined
-        joined = joined.concat(','); // adds , to end of joined
-        joined = joined.concat(feeling); // adds feeling to end of joined
-        joined = joined.concat(','); // adds , to end of joined
-        joined = joined.concat(image); // adds image to end of joined
-        var test = true;
+        //checks if only image is selected
+        if (input == '' && feeling == '' && dropdown != '0'){
+          page.querySelector('#dialogBox3').innerHTML = '<div id="hideEditDayDialogBox" class="alert-dialog-mask"></div><div id="hideEditDayDialogBox2" class="alert-dialog"><div id="hideEditDayDialogBox3" class="alert-dialog-container"><div id="hideEditDayDialogBox4" class="alert-dialog-content">You cannot only select an image.</div><div id="hideEditDayDialogBox5" class="alert-dialog-footer"><button id="okButton5" class="alert-dialog-button">Ok</button></div></div></div>';
 
-        //Checks if event for a day is already inputted
-        for (var i = 0; i < eventArray.length; i++) {
-          var eventSplit = eventArray[i].split(',');
-          if (eventSplit[1] == store){
-            // if date exists, replaces the input with new input
-            var joined = input.concat(',');
-            joined = joined.concat(store);
-            joined = joined.concat(',');
-            joined = joined.concat(feeling);
-            joined = joined.concat(','); // adds , to end of joined
-            eventArray[i] = joined.concat(image);
-            test = false;
-            break;
+          //Displays hidden dialog box
+          document.querySelector('#hideEditDayDialogBox').style.display = block;
+          document.querySelector('#hideEditDayDialogBox2').style.display = block;
+          document.querySelector('#hideEditDayDialogBox3').style.display = block;
+          document.querySelector('#hideEditDayDialogBox4').style.display = block;
+          document.querySelector('#hideEditDayDialogBox5').style.display = block;
+          document.querySelector('#okButton5').style.display = block;
+
+          page.querySelector('#okButton5').onclick = function() {
+            //Hides dialog box
+            document.querySelector('#hideEditDayDialogBox').style.display = none;
+            document.querySelector('#hideEditDayDialogBox2').style.display = none;
+            document.querySelector('#hideEditDayDialogBox3').style.display = none;
+            document.querySelector('#hideEditDayDialogBox4').style.display = none;
+            document.querySelector('#hideEditDayDialogBox5').style.display = none;
+            document.querySelector('#okButton5').style.display = none;
+          };
+        }
+        else {
+          if (dropdown == '1'){
+            image = '<img src="images/heart.png" alt="Heart" class="monthImages" style="height:55px; margin-top:-10px;">';
           }
+          else if (dropdown == '2'){
+            image = '<img src="images/horse.png" alt="Horse" class="monthImages" style="height:50px;">';
+          }
+          else if (dropdown == '3'){
+            image = '<img src="images/fashion.png" alt="Model" class="monthImages" style="height:55px; margin-top:-15px;">';
+          }
+          else if (dropdown == '4'){
+            image = '<img src="images/film.png" alt="Movie Camera" class="monthImages" style="height:40px;">';
+          }
+
+          var joined = input.concat(','); // adds , to end of input
+          joined = joined.concat(store); //adds store to end of joined
+          joined = joined.concat(','); // adds , to end of joined
+          joined = joined.concat(feeling); // adds feeling to end of joined
+          joined = joined.concat(','); // adds , to end of joined
+          joined = joined.concat(image); // adds image to end of joined
+          var test = true;
+
+          //Checks if event for a day is already inputted
+          for (var i = 0; i < eventArray.length; i++) {
+            var eventSplit = eventArray[i].split(',');
+            if (eventSplit[1] == store){
+              // if date exists, replaces the input with new input
+              var joined = input.concat(',');
+              joined = joined.concat(store);
+              joined = joined.concat(',');
+              joined = joined.concat(feeling);
+              joined = joined.concat(','); // adds , to end of joined
+              eventArray[i] = joined.concat(image);
+              test = false;
+              break;
+            }
+          }
+          if (test == true){ //if element is not replaced, creates new element in array
+            eventArray.push(joined);
+          }
+          // Opens month.html page, passing the website name, theme and events array
+          document.querySelector('#firstPage').pushPage('Month.html', {data: {title: websiteName, theme:theme, events:eventArray}});
         }
-        if (test == true){ //if element is not replaced, creates new element in array
-          eventArray.push(joined);
-        }
-        // Opens month.html page, passing the website name, theme and events array
-        document.querySelector('#firstPage').pushPage('Month.html', {data: {title: websiteName, theme:theme, events:eventArray}});
-      };
+        };
 
       // Navigates the previous page when the back toolbar button is clicked
       page.querySelector('#backEvent').onclick = function() {
@@ -810,7 +835,7 @@
           }
           else if ((count == 24 || count == 25 || count == 26) && selectedMonth == 2){
             todaysEvent = "FORMULA 1 GRAND PRIX";
-            todaysImage = '<img src="images/car.png" alt="Racing Car" class="monthImages" style="height:35px;  width:65px;">';
+            todaysImage = '<img src="images/car.png" alt="Racing Car" class="monthImages" style="height:35px; width:65px;">';
           }
           else if (count == 25 && selectedMonth == 3){
             todaysEvent = "ANZAC DAY";
@@ -824,22 +849,22 @@
           }
           else if (count == 1 && selectedMonth == 4){
             todaysEvent = "EASTER SUNDAY";
-            todaysImage = '<img src="images/egg.png" alt="Easter Egg" class="monthImages" style="height:55px;margin-top:-5px;">';
+            todaysImage = '<img src="images/egg.png" alt="Easter Egg" class="monthImages" style="height:55px;">';
           }
           else if (count == 2 && selectedMonth == 4){
             todaysEvent = "EASTER MONDAY";
           }
           else if ((count == 2 || count == 9 || count == 16 ) && selectedMonth == 7){
             todaysEvent = "WINTER NIGHT MARKET";
-            todaysImage = '<img src="images/market.png" alt="Strawberries" class="monthImages" style="height:50px;margin-top:-10px;">';
+            todaysImage = '<img src="images/market.png" alt="Strawberries" class="monthImages" style="height:50px;">';
           }
           else if ((count == 1 || count == 2 || count == 3 || count == 4 || count == 5 || count == 6 || count == 7 || count == 8) && selectedMonth == 8){
             todaysEvent = "SPRING FASHION WEEK";
-            todaysImage = '<img src="images/fashion.png" alt="Model" class="monthImages" style="height:65px; margin-top:-10px;">';
+            todaysImage = '<img src="images/fashion.png" alt="Model" class="monthImages" style="height:65px; ">';
           }
           else if ((count == 20 || count == 21 || count == 22) && selectedMonth == 9){
             todaysEvent = "AUSTRALIAN MOTORCYCLE GRAND PRIX";
-            todaysImage = '<img src="images/bike.png" alt="Motorbike" class="monthImages" style="height:50px; margin-top:-3px; margin-right:0px;">';
+            todaysImage = '<img src="images/bike.png" alt="Motorbike" class="monthImages" style="height:50px; margin-right:0px;">';
           }
           else if (count == 31 && selectedMonth == 9){
             todaysEvent = "HALLOWEEN";
@@ -847,7 +872,7 @@
           }
           else if (count == 4 && selectedMonth == 10){
             todaysEvent = "SPRING RACING CARNIVAL";
-            todaysImage = '<img src="images/horse.png" alt="Running Horse" class="monthImages" style="height:46px;margin-top:-3px;">';
+            todaysImage = '<img src="images/horse.png" alt="Running Horse" class="monthImages" style="height:46px;">';
           }
           else if (count == 7 && selectedMonth == 10){
             todaysEvent = "MELBOURNE CUP";
@@ -858,21 +883,21 @@
           }
           else if (count == 25 && selectedMonth == 11){
             todaysEvent = "CHRISTMAS DAY";
-            todaysImage = '<img src="images/tree.png" alt="Christmas Tree" class="monthImages" style="height:63px;margin-top:-10px;">';
+            todaysImage = '<img src="images/tree.png" alt="Christmas Tree" class="monthImages" style="height:63px;">';
           }
           else if (count == 26 && selectedMonth == 11){
             todaysEvent = "BOXING DAY";
           }
           else if (count == 31 && selectedMonth == 11){
             todaysEvent = "NEW YEARS EVE";
-            todaysImage = '<img src="images/firework.png" alt="Firework" class="monthImages" style="height:63px;margin-top:-10px;">';
+            todaysImage = '<img src="images/firework.png" alt="Firework" class="monthImages" style="height:63px;">';
           }
           else  {
             todaysEvent = "NONE";
           }
 
           //creates list item with the selected values
-          table += '<ul style="background-color:'+ colour +'; height: 170px;" class="list list--material"><li class="list__header list__header--material" style"65%;">'+ daysOfTheWeek[weekDay] + ' ' + count + ' ' + todaysPrint + '</li><li class="list__item list__item--material"><div class="list__item--material__center" style="padding: 12px 6px 0px 0px; width:100%;"><div class="list__item__title list__item--material__title"></div><div class="list__item__subtitle list__item--material__ subtitle" style="font-size:12px;" id="' + month[selectedMonth] + count +'">EVENT:<br>'+ todaysEvent + '<br>' + todaysFeelings + '<br>' + todaysImage +'</div></div></div></li></ul>';
+          table += '<ul style="background-color:'+ colour +'; height: 250px;" class="list list--material"><li class="list__header list__header--material" style"65%;">'+ daysOfTheWeek[weekDay] + ' ' + count + ' ' + todaysPrint + '</li><li class="list__item list__item--material"><div class="list__item--material__center" style="padding: 12px 6px 0px 0px; width:100%;"><div class="list__item__title list__item--material__title"></div><div class="list__item__subtitle list__item--material__ subtitle" style="font-size:12px;" id="' + month[selectedMonth] + count +'">EVENT:<br>'+ todaysEvent + '<br>' + todaysFeelings + '<br>' + todaysImage +'</div></div></div></li></ul>';
 
           table += '</td>';
 
