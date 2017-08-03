@@ -164,8 +164,7 @@
 
       // Creates select box and sub heading
       page.querySelector('#storeInDb').innerHTML += '<div style="padding-left: 4%; padding-bottom: 10px; padding-top: 20px;">Would you like to include an image?</div>';
-      page.querySelector('#storeInDb').innerHTML += '<ons-select style="padding-left: 4%; padding-bottom: 10px; width:92%;" id="choose-sel" ><option value="0">No image</option><option value="1">Heart</option><option value="2">Horse</option><option value="3">Model</option><option value="4">Movie Camera</option></ons-select><br><br>';
-
+      page.querySelector('#storeInDb').innerHTML += '<ons-select style="padding-left: 4%; padding-bottom: 10px; width:92%;" id="choose-sel" ><option value="0">No image</option><option value="1">Heart</option><option value="2">Horse</option><option value="3">Model</option><option value="4">Movie Camera</option><option value="5">Firework</option><option value="6">Market</option><option value="7">Motorbike</option><option value="8">Racing Car</option></ons-select><br><br>';
 
       // Creates button which links loads storeCalanderEdit.php to store data inputted
       page.querySelector('#storeInDb').innerHTML += '<input id="selectButton" class="button" type="submit" value="Submit" style="width: 60%; left: 20%; text-align: center; top: 20px; margin-bottom:20px;">';
@@ -213,6 +212,18 @@
         }
         else if (dropdown == '4'){
           image = '<img src="images/film.png" alt="Movie Camera" class="monthImages" style="height:40px;">';
+        }
+        else if (dropdown == '5'){
+          image = '<img src="images/firework.png" alt="Firework" class="monthImages" style="height:63px;">';
+        }
+        else if (dropdown == '6'){
+          image = '<img src="images/market.png" alt="Market" class="monthImages" style="height:50px;">';
+        }
+        else if (dropdown == '7'){
+          image = '<img src="images/bike.png" alt="Motorbile" class="monthImages" style="height:50px; margin-right:0px;">';
+        }
+        else if (dropdown == '8'){
+          image = '<img src="images/car.png" alt="Racing Car" class="monthImages" style="width:65px;">';
         }
 
         var joined = input.concat(','); // adds , to end of input
