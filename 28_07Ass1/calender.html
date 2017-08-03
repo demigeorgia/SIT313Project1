@@ -270,6 +270,18 @@
       var eventArray = page.data.events;
 
       var printCurrentDate = "";
+      
+      //Sets background colour to current theme
+      var theme = page.data.theme;
+      if (theme == "blue"){
+        document.body.style.backgroundColor = darkerblue;
+      }
+      else if (theme == "green"){
+        document.body.style.backgroundColor = darkergreen;
+      }
+      else {
+        document.body.style.backgroundColor = darkerpink;
+      }
 
       //Finds out what ending each number should have e.g. 1st 2nd 3rd
       var j = currentDate % 10;
@@ -948,7 +960,8 @@
       page.querySelector('ons-toolbar .center').innerHTML = websiteName;
 
       var eventArray = page.data.events;
-
+      var theme = page.data.theme;
+      
       // Stores date selected in variable
       var store = page.data.title;
 
@@ -963,7 +976,27 @@
       //Submit button
       page.querySelector('#storeInDb').innerHTML += '<ons-button id="submitTheme" class="button" style="width: 60%; left: 20%; text-align: center; top: 20px; margin-bottom:20px;">Submit</ons-button>';
 
-
+      //Checks what theme is currently selected and changes selected radio butotn depending on theme
+      if (theme == "pink"){
+        page.querySelector('#r1').checked = true;
+      }
+      else if (theme == "blue"){
+        page.querySelector('#r2').checked = true;
+      }
+      else if (theme == "green"){
+        page.querySelector('#r3').checked = true;
+      }
+      
+      //Lets users preview the background colour after clicking radio button
+      page.querySelector('#r1').onclick = function() {
+        document.body.style.backgroundColor = darkerpink;
+      }
+      page.querySelector('#r2').onclick = function() {
+        document.body.style.backgroundColor = darkerblue;
+      }
+      page.querySelector('#r3').onclick = function() {
+        document.body.style.backgroundColor = darkergreen;
+      }
 
       //stores the theme in variable and passes it to the calender page
       page.querySelector('#submitTheme').onclick = function() {
@@ -973,7 +1006,7 @@
 
       // Navigates the previous page when the back toolbar button is clicked
       page.querySelector('#backEvent').onclick = function() {
-        document.querySelector('#firstPage').popPage();
+        document.querySelector('#firstPage').pushPage('homePage.html', {data: {title: "2018 Calender", theme: theme, events:eventArray}});
       };
     };
   });
