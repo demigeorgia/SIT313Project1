@@ -22,6 +22,11 @@
     return daysInMonth;
   }
 
+  var loadFile = function(event) {
+    var output = document.getElementById('output');
+    output.src = URL.createObjectURL(event.target.files[0]);
+  };
+
   document.addEventListener('init', function(event) {
 
     var date = new Date();
@@ -36,7 +41,7 @@
     var dates = [];
     var dayCount = 0;
     var dayCountTwo = 1;
-    
+
     //THEME COLOUS
     var lighterblue = "#e8f4f8";
     var lightergreen = "#d1e0d6";
@@ -159,8 +164,9 @@
 
       // Creates select box and sub heading
       page.querySelector('#storeInDb').innerHTML += '<div style="padding-left: 4%; padding-bottom: 10px; padding-top: 20px;">Would you like to include an image?</div>';
-      page.querySelector('#storeInDb').innerHTML += '<ons-select style="padding-left: 4%; padding-bottom: 10px; padding-top: 20px;" id="choose-sel" ><option value="0">No image</option><option value="1">Heart</option><option value="2">Horse</option><option value="3">Model</option><option value="4">Movie Camera</option></ons-select><br><br>';
-      
+      page.querySelector('#storeInDb').innerHTML += '<ons-select style="padding-left: 4%; padding-bottom: 10px; width:92%;" id="choose-sel" ><option value="0">No image</option><option value="1">Heart</option><option value="2">Horse</option><option value="3">Model</option><option value="4">Movie Camera</option></ons-select><br><br>';
+
+
       // Creates button which links loads storeCalanderEdit.php to store data inputted
       page.querySelector('#storeInDb').innerHTML += '<input id="selectButton" class="button" type="submit" value="Submit" style="width: 60%; left: 20%; text-align: center; top: 20px; margin-bottom:20px;">';
 
@@ -168,11 +174,11 @@
       page.querySelector('#selectButton').onclick = function() {
         var input = page.querySelector('#textInputThree').value;
         var feeling = page.querySelector('#textInputTwo').value;
-        
+
         var image = '';
         var dropdown = page.querySelector('#choose-sel').value;
-        
-        //checks if only image is selected
+
+        //checks if only image is selted
         if (input == '' && feeling == '' && dropdown != '0'){
           page.querySelector('#dialogBox3').innerHTML = '<div id="hideEditDayDialogBox" class="alert-dialog-mask"></div><div id="hideEditDayDialogBox2" class="alert-dialog"><div id="hideEditDayDialogBox3" class="alert-dialog-container"><div id="hideEditDayDialogBox4" class="alert-dialog-content">You cannot only select an image.</div><div id="hideEditDayDialogBox5" class="alert-dialog-footer"><button id="okButton5" class="alert-dialog-button">Ok</button></div></div></div>';
 
@@ -195,49 +201,52 @@
           };
         }
         else {
-          if (dropdown == '1'){
-            image = '<img src="images/heart.png" alt="Heart" class="monthImages" style="height:55px; margin-top:-10px;">';
-          }
-          else if (dropdown == '2'){
-            image = '<img src="images/horse.png" alt="Horse" class="monthImages" style="height:50px;">';
-          }
-          else if (dropdown == '3'){
-            image = '<img src="images/fashion.png" alt="Model" class="monthImages" style="height:55px; margin-top:-15px;">';
-          }
-          else if (dropdown == '4'){
-            image = '<img src="images/film.png" alt="Movie Camera" class="monthImages" style="height:40px;">';
-          }
 
-          var joined = input.concat(','); // adds , to end of input
-          joined = joined.concat(store); //adds store to end of joined
-          joined = joined.concat(','); // adds , to end of joined
-          joined = joined.concat(feeling); // adds feeling to end of joined
-          joined = joined.concat(','); // adds , to end of joined
-          joined = joined.concat(image); // adds image to end of joined
-          var test = true;
-
-          //Checks if event for a day is already inputted
-          for (var i = 0; i < eventArray.length; i++) {
-            var eventSplit = eventArray[i].split(',');
-            if (eventSplit[1] == store){
-              // if date exists, replaces the input with new input
-              var joined = input.concat(',');
-              joined = joined.concat(store);
-              joined = joined.concat(',');
-              joined = joined.concat(feeling);
-              joined = joined.concat(','); // adds , to end of joined
-              eventArray[i] = joined.concat(image);
-              test = false;
-              break;
-            }
-          }
-          if (test == true){ //if element is not replaced, creates new element in array
-            eventArray.push(joined);
-          }
-          // Opens month.html page, passing the website name, theme and events array
-          document.querySelector('#firstPage').pushPage('Month.html', {data: {title: websiteName, theme:theme, events:eventArray}});
+        if (dropdown == '1'){
+          image = '<img src="images/heart.png" alt="Heart" class="monthImages" style="height:55px;">';
         }
-        };
+        else if (dropdown == '2'){
+          image = '<img src="images/horse.png" alt="Horse" class="monthImages" style="height:50px;">';
+        }
+        else if (dropdown == '3'){
+          image = '<img src="images/fashion.png" alt="Model" class="monthImages" style="height:55px;">';
+        }
+        else if (dropdown == '4'){
+          image = '<img src="images/film.png" alt="Movie Camera" class="monthImages" style="height:40px;">';
+        }
+
+        var joined = input.concat(','); // adds , to end of input
+        joined = joined.concat(store); //adds store to end of joined
+        joined = joined.concat(','); // adds , to end of joined
+        joined = joined.concat(feeling); // adds feeling to end of joined
+        joined = joined.concat(','); // adds , to end of joined
+        joined = joined.concat(image); // adds image to end of joined
+
+        var test = true;
+
+        //Checks if event for a day is already inputted
+        for (var i = 0; i < eventArray.length; i++) {
+          var eventSplit = eventArray[i].split(',');
+          if (eventSplit[1] == store){
+            // if date exists, replaces the input with new input
+            var joined = input.concat(',');
+            joined = joined.concat(store);
+            joined = joined.concat(',');
+            joined = joined.concat(feeling);
+            joined = joined.concat(','); // adds , to end of joined
+            eventArray[i] = joined.concat(image);
+            test = false;
+            break;
+          }
+        }
+        if (test == true){ //if element is not replaced, creates new element in array
+          eventArray.push(joined);
+        }
+
+        // Opens month.html page, passing the website name, theme and events array
+        document.querySelector('#firstPage').pushPage('Month.html', {data: {title: websiteName, theme:theme, events:eventArray}});
+      }
+      };
 
       // Navigates the previous page when the back toolbar button is clicked
       page.querySelector('#backEvent').onclick = function() {
@@ -641,7 +650,11 @@
       };
 
       //Changs the backgroundColor and table/list colour depending on theme
-      if (theme == "blue"){
+      if (theme == "pink"){
+        selectedColour = lighterpink;
+        document.body.style.backgroundColor = darkerpink;
+      }
+      else if (theme == "blue"){
         selectedColour = lighterblue;
         document.body.style.backgroundColor = darkerblue;
       }
@@ -708,6 +721,8 @@
       var inputMonth = "";
       var inputDay = "";
 
+      var test = false;
+
       // Creates 8 rows and 4 columns
       for (var i = 0; i < 11; i++) {
         table += '<tr>';
@@ -730,11 +745,6 @@
           else {
             colour = "white";
           }
-
-          var todaysEvent = "";
-          var todaysImage = "";
-          var todaysFeelings = "";
-          var todaysPrint = "";
 
           //checks if the events array is defined and the event is defined
           if (page.data.events != undefined && eventArray[elementPosition] != undefined) {
@@ -787,33 +797,38 @@
             }
           }
 
+          var todaysEvent = "";
+          var todaysImage = "";
+          var todaysFeelings = "";
+          var todaysPrint = "";
+
           //displays data stored in eventArray
           //checks if event in array exists for this day
           if (count == inputDay && selectedMonth == inputMonthTnt){
-            
-            if (eventSplit[0] != ''){
+            if (eventSplit[0] != '')
+            {
               todaysEvent = eventSplit[0].toUpperCase();
             }
-            else {
-              //sets to default text
+            else
+            { //sets to default text
               todaysEvent = "NONE";
             }
-            
-            if (eventSplit[2] != '') {
-              todaysFeelings = '<br>FEELING TODAY:<br>' + eventSplit[2].toUpperCase();
+
+            if (eventSplit[2] != '')
+            {
+              todaysFeelings = '<br>FEELING:<br>' + eventSplit[2].toUpperCase();
             }
-            else {
-              //prints nothing
+            else
+            { //prints nothing
               todaysFeelings = "";
             }
-            
+
             if (eventSplit[3] != ''){
               todaysImage = eventSplit[3];
             }
             else {
               todaysImage = '';
             }
-            
           } // changes what's printed in each element depending on what day it is
           else if (count == currentDate && selectedMonth == currentMonth){
             todaysPrint = "TODAY";
@@ -932,10 +947,12 @@
 
       // Creates radio buttons and sub heading
       page.querySelector('#storeInDb').innerHTML += '<div style="padding-left: 4%; padding-bottom: 10px; padding-top:8px;">What colour theme would you like?</div>';
-      page.querySelector('#storeInDb').innerHTML += '<div style="padding-left: 4%;"><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="r1" value="pink" class="radio-button__input radio-button--material__input" name="r" checked="checked"><div class="radio-button__checkmark radio-button--material__checkmark"></div>Pink</label><br><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="r2" value="blue" class="radio-button__input radio-button--material__input" name="r"><div class="radio-button__checkmark radio-button--material__checkmark"></div>Blue</label><br><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="r3" value="green" class="radio-button__input radio-button--material__input" name="r"><div class="radio-button__checkmark radio-button--material__checkmark"></div>Green</label></div>';
+      page.querySelector('#storeInDb').innerHTML += '<div style="padding-left: 4%;"><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="r1" value="pink" class="radio-button__input radio-button--material__input" name="r" checked="checked"><div class="radio-button__checkmark radio-button--material__checkmark"></div> Pink</label><br><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="r2" value="blue" class="radio-button__input radio-button--material__input" name="r"><div class="radio-button__checkmark radio-button--material__checkmark"></div> Blue</label><br><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="r3" value="green" class="radio-button__input radio-button--material__input" name="r"><div class="radio-button__checkmark radio-button--material__checkmark"></div> Green</label></div>';
 
       //Submit button
       page.querySelector('#storeInDb').innerHTML += '<ons-button id="submitTheme" class="button" style="width: 60%; left: 20%; text-align: center; top: 20px; margin-bottom:20px;">Submit</ons-button>';
+
+
 
       //stores the theme in variable and passes it to the calender page
       page.querySelector('#submitTheme').onclick = function() {
@@ -977,8 +994,9 @@
         <!-- Page introduction -->
         <div style="text-align: center; font-size: 16px; padding: 0px 30px;">
           <br>
+
             <headingStyle style="font-size: 16px;" id="todaysDate"></headingStyle><br><br>
-          Keep track of upcoming events in Melbourne and Australia using this online<br>easy to use 2018 Calender.
+          Keep track of upcoming events in Melbourne and Australia using this online<br>easy to use web-based Calender.
         </div>
       </div>
       </p>
@@ -1025,7 +1043,7 @@
       <p style="padding-left:5px; padding-right:5px;">
         <div style="padding-top: 20px; padding-left: 20px; text-align:center;">
           <!-- Page heading -->
-          <headingStyle id="displayMonthDay" style="font-size: 35px;"></headingStyle>
+          <headingStyle id="displayMonthDay" style="font-size: 50px;"></headingStyle>
         </div>
       </p>
       <!-- Displays a list of days in the current selected month -->
@@ -1049,7 +1067,7 @@
       </p>
       <!-- Input deviced stored in a form so all data is transfered to storeCalenderEdit.php when the form is submitted-->
       <div id="storeInDb"></div>
-
+      <div style="z-index: 999;" id="dialogBox3"></div>
     </ons-page>
   </ons-template>
 
