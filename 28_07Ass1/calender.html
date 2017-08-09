@@ -21,6 +21,40 @@
     }
     return daysInMonth;
   }
+    
+  function validatePassword(){
+
+    //Gets user input and stored password
+    var password = document.getElementById("passwrdid").value;
+    var storedpassword = localStorage.getItem("passwrd");
+
+    //checks if input is null
+    if (password == ""){
+      alert("Password cannot be blank");
+      return false;
+    }
+
+    //Checks if password has already been set
+    if (storedpassword === 'null' || storedpassword == null){
+      //stores inputted password
+      localStorage.setItem("passwrd", password);
+      localStorage.setItem("checkLock", 'locked');
+    }
+    else{
+      //checks if inputted password is the same as the stored password
+      if (password != storedpassword){
+        alert("Password is incorrect");
+        return false;
+      }
+      else{
+        //resets stored password to null so user can unlock website.
+        localStorage.setItem("passwrd", 'null');
+        localStorage.setItem("checkLock", 'unlocked');
+      }
+    }
+
+    document.getElementById('lockedStatus').innerHTML = localStorage.getItem("checkLock");
+  }
 
   var loadFile = function(event) {
     var output = document.getElementById('output');
@@ -28,6 +62,8 @@
   };
 
   document.addEventListener('init', function(event) {
+    
+    document.getElementById('lockedStatus').innerHTML = localStorage.getItem("checkLock");
 
     var date = new Date();
     var currentMonth = date.getMonth();
@@ -136,6 +172,17 @@
     //Store website name to be used as toolbar center text
     var websiteName = '2018 Calender';
 
+     if (page.id === 'lock'){
+      page.querySelector('#enterWebsite').onclick = function() {
+        var i = localStorage.getItem("checkLock");
+        if (i == 'unlocked'){
+          document.querySelector('#firstPage').pushPage('homePage.html', {data: {title: websiteName}});
+        }
+        else {
+          alert("Website is locked.");
+        }
+      };
+    }
     if (page.id === 'EditDay'){
 
       // Sets toolar label
@@ -1021,12 +1068,35 @@
   </head>
   <body>
 
-  <ons-navigator id="firstPage" page="homePage.html"></ons-navigator>
+  <ons-navigator id="firstPage" page="lock.html"></ons-navigator>
+    
+    <ons-template id="lock.html">
+    <ons-page id="lock">
+      <ons-toolbar></ons-toolbar>
+      <p style="padding-left: 20px;">
+        <div style="padding:20px 40px 30px 40px; text-align:center;">
+          <headingStyle style="font-size: 35px;">Welcome</headingStyle><br><br>
+          Welcome to 2018 Calender. <br>
+          This calender allows you to keep track of your up coming events and take note of how you're feeling each day.
+        </div>
+        <input type="submit" id="enterWebsite" value="Enter" class="button" style="width: 50%; left:25%;">
+        <div style="text-align: center; font-size: 16px; padding: 30px 30px 0px 30px;">
+          <headingStyle style="font-size: 16px;">The website is </headingStyle>
+          <headingStyle style="font-size: 16px;" id="lockedStatus"></headingStyle><br><br>
+        </div>
+        <form onsubmit="return validatePassword();" style="width:50%; margin-left:25%; margin-bottom:15px;">
+          <input type="text" style="width:100%;" id="passwrdid" name="passwrdname" class="text-input--underbar" placeholder="Enter a password">
+          <input type="submit" value="Submit" class="button" style="width: 100%; top: 20px;">
+        </form>
+      </p>
+    </ons-page>
+  </ons-template>
 
   <ons-template id="homePage.html">
     <ons-page id="homePage">
       <!-- Toolbar center text-->
       <ons-toolbar>
+        <div class="left" id="logout" style="color: white; padding-left: 8px; cursor: pointer;" onClick="history.go(0)">Lock</div>
         <div class="center" style="color: white;"></div>
       </ons-toolbar>
       <p style="padding-left: 20px;">
@@ -1038,7 +1108,6 @@
         <!-- Page introduction -->
         <div style="text-align: center; font-size: 16px; padding: 0px 30px;">
           <br>
-
             <headingStyle style="font-size: 16px;" id="todaysDate"></headingStyle><br><br>
           Keep track of upcoming events in Melbourne and Australia using this online<br>easy to use web-based Calender.
         </div>
