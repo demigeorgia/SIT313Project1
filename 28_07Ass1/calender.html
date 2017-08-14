@@ -198,7 +198,7 @@
 
       // Stores date selected in variable
       var store = page.data.title;
-      var theme = page.data.theme;
+      var theme = localStorage.getItem("theme");
 
       //Creates location for heading to be placed and then sets the heading of page to 'Edit' + the selected day
       page.querySelector('#storeInDb').innerHTML += '<div id="editDayHeading" style="padding-bottom: 12px; text-align: center; font-size: 35px;"></div>';
@@ -303,7 +303,7 @@
       var printCurrentDate = "";
 
       //Sets background colour to current theme
-      var theme = page.data.theme;
+      var theme = localStorage.getItem("theme");
       if (theme == "blue"){
         document.body.style.backgroundColor = darkerblue;
       }
@@ -352,8 +352,7 @@
     if (page.id === 'Day'){
 
       // gets selected theme and events array
-      var theme = page.data.theme;
-      var eventArray = page.data.events;
+      var theme = localStorage.getItem("theme");
 
       //sets Middle toolbar label
       page.querySelector('ons-toolbar .center').innerHTML = page.data.title; //Days Title
@@ -628,7 +627,8 @@
     }
     if (page.id === 'Month'){
       //gets selected theme
-      var theme = page.data.theme;
+      var theme = localStorage.getItem("theme");
+      var columns = localStorage.getItem("columns");
 
       // Navigates back a month if the month is not January
       page.querySelector('#backMonth').onclick = function() {
@@ -771,18 +771,29 @@
       var inputDay = "";
 
       var test = false;
+      
+      var noOfColumns = 3;
+      var percentage = 33;
+      if (columns == "5"){
+        noOfColumns = 5;
+        percentage = 20;
+      }
+      else {
+        noOfColumns = 3;
+        percentage = 33;
+      }
 
       // Creates 8 rows and 4 columns
       for (var i = 0; i < 11; i++) {
         table += '<tr>';
-        for (var j = 0; j < 3; j++) {
+        for (var j = 0; j < noOfColumns; j++) {
 
           // stops creating elements when there are no more days in the month
           if (count > daysInMonth){
             break;
           }
 
-          table += '<td style="width:33%;">';
+          table += '<td style="width:' + percentage + '%;">';
 
           colourCount++;
 
@@ -956,8 +967,8 @@
       // Sets toolar label
       page.querySelector('ons-toolbar .center').innerHTML = websiteName;
 
-      var eventArray = page.data.events;
-      var theme = page.data.theme;
+      var theme = localStorage.getItem("theme");
+      var columns = localStorage.getItem("columns");
 
       // Stores date selected in variable
       var store = page.data.title;
@@ -970,6 +981,10 @@
       page.querySelector('#storeInDb').innerHTML += '<div style="padding-left: 4%; padding-bottom: 10px; padding-top:8px;">What colour theme would you like?</div>';
       page.querySelector('#storeInDb').innerHTML += '<div style="padding-left: 4%;"><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="r1" value="pink" class="radio-button__input radio-button--material__input" name="r" checked="checked"><div class="radio-button__checkmark radio-button--material__checkmark"></div> Pink</label><br><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="r2" value="blue" class="radio-button__input radio-button--material__input" name="r"><div class="radio-button__checkmark radio-button--material__checkmark"></div> Blue</label><br><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="r3" value="green" class="radio-button__input radio-button--material__input" name="r"><div class="radio-button__checkmark radio-button--material__checkmark"></div> Green</label></div>';
 
+      //Change number of rows on calender
+      page.querySelector('#storeInDb').innerHTML += '<div style="padding-left: 4%; padding-bottom: 10px; padding-top:8px;">How many columns would you like on the calender?</div>';
+      page.querySelector('#storeInDb').innerHTML += '<div style="padding-left: 4%;"><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="s1" value="3" class="radio-button__input radio-button--material__input" name="s" checked="checked"><div class="radio-button__checkmark radio-button--material__checkmark"></div> 3</label><br><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="s2" value="5" class="radio-button__input radio-button--material__input" name="s"><div class="radio-button__checkmark radio-button--material__checkmark"></div> 5</label>';
+      
       //Submit button
       page.querySelector('#storeInDb').innerHTML += '<ons-button id="submitTheme" class="button" style="width: 60%; left: 20%; text-align: center; top: 20px; margin-bottom:20px;">Submit</ons-button>';
 
@@ -982,6 +997,14 @@
       }
       else if (theme == "green"){
         page.querySelector('#r3').checked = true;
+      }
+      
+      //Checks how many columns is currently selected and changes selected column depending on chosen column value
+      if (columns == "3"){
+        page.querySelector('#s1').checked = true;
+      }
+      else {
+        page.querySelector('#s2').checked = true;
       }
 
       //Lets users preview the background colour after clicking radio button
@@ -998,7 +1021,12 @@
       //stores the theme in variable and passes it to the calender page
       page.querySelector('#submitTheme').onclick = function() {
         var theme = document.querySelector('input[name=r]:checked').value;
-        document.querySelector('#firstPage').pushPage('Month.html', {data: {title: "View Day", theme: theme, events:eventArray}});
+        localStorage.setItem("theme", theme);
+
+        var columns = document.querySelector('input[name=s]:checked').value;
+        localStorage.setItem("columns", columns);
+
+        document.querySelector('#firstPage').pushPage('Month.html', {data: {title: "View Day"}});
       }
 
       // Navigates the previous page when the back toolbar button is clicked
