@@ -24,8 +24,11 @@
     
   function validatePassword(){
 
-    //Gets user input and stored password
+    //Gets user input and stored password, and encrypts input using SHA256
     var password = document.getElementById("passwrdid").value;
+    var hash = sha256.create();
+    hash.update(password);
+    
     var storedpassword = localStorage.getItem("passwrd");
 
     //checks if input is null
@@ -34,9 +37,9 @@
       return false;
     }
 
-    //Checks if password has already been set
+    //Checks if password has not already been set
     if (storedpassword === 'null' || storedpassword == null){
-      //stores inputted password
+      //stores encrypted password
       localStorage.setItem("passwrd", password);
       localStorage.setItem("checkLock", 'locked');
     }
