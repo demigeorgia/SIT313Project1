@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <link rel="stylesheet" href="css/onsenui.css">
@@ -7,6 +6,42 @@
   <script src="js/onsenui.min.js"></script>
 
   <script>
+
+  function validatePassword(){
+
+    //Gets user input and stored password, and encrypts input using SHA256
+    var password = document.getElementById("passwrdid").value;
+    //var hash = sha256.create();
+    //hash.update(password);
+
+    var storedpassword = localStorage.getItem("passwrd");
+
+    //checks if input is null
+    if (password == ""){
+      alert("Password cannot be blank");
+      return false;
+    }
+
+    if (storedpassword === 'null' || storedpassword == null){
+      //stores encrypted password
+      localStorage.setItem("passwrd", password);
+      localStorage.setItem("checkLock", 'locked');
+    }
+    else{
+      //checks if inputted password is the same as the stored password
+      if (password != storedpassword){
+        alert("Password is incorrect");
+      }
+      else{
+        //resets stored password to null so user can unlock website.
+        localStorage.setItem("passwrd", 'null');
+        localStorage.setItem("checkLock", 'unlocked');
+      }
+    }
+
+    document.getElementById('lockedStatus').innerHTML = localStorage.getItem("checkLock");
+    return false;
+  }
 
   //Find out how many days there are in each month
   function GetSelectedMonth(month){
@@ -21,43 +56,6 @@
     }
     return daysInMonth;
   }
-    
-  function validatePassword(){
-
-    //Gets user input and stored password, and encrypts input using SHA256
-    var password = document.getElementById("passwrdid").value;
-    var hash = sha256.create();
-    hash.update(password);
-    
-    var storedpassword = localStorage.getItem("passwrd");
-
-    //checks if input is null
-    if (password == ""){
-      alert("Password cannot be blank");
-      return false;
-    }
-
-    //Checks if password has not already been set
-    if (storedpassword === 'null' || storedpassword == null){
-      //stores encrypted password
-      localStorage.setItem("passwrd", password);
-      localStorage.setItem("checkLock", 'locked');
-    }
-    else{
-      //checks if inputted password is the same as the stored password
-      if (password != storedpassword){
-        alert("Password is incorrect");
-        return false;
-      }
-      else{
-        //resets stored password to null so user can unlock website.
-        localStorage.setItem("passwrd", 'null');
-        localStorage.setItem("checkLock", 'unlocked');
-      }
-    }
-
-    document.getElementById('lockedStatus').innerHTML = localStorage.getItem("checkLock");
-  }
 
   var loadFile = function(event) {
     var output = document.getElementById('output');
@@ -65,14 +63,12 @@
   };
 
   document.addEventListener('init', function(event) {
-    
+
     document.getElementById('lockedStatus').innerHTML = localStorage.getItem("checkLock");
 
     var date = new Date();
     var currentMonth = date.getMonth();
     var currentDate = date.getUTCDate();
-
-    var eventArray = new Array();
 
     var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     var daysOfTheWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -176,6 +172,22 @@
     var websiteName = '2018 Calender';
 
      if (page.id === 'lock'){
+
+       //gets selected theme
+       var theme = localStorage.getItem("themeColour");
+       if (theme == "pink"){
+         document.body.style.backgroundColor = darkerpink;
+       }
+       else if (theme == "blue"){
+         document.body.style.backgroundColor = darkerblue;
+       }
+       else if (theme == "green"){
+         document.body.style.backgroundColor = darkergreen;
+       }
+       else {
+         document.body.style.backgroundColor = darkerpink;
+       }
+
       page.querySelector('#enterWebsite').onclick = function() {
         var i = localStorage.getItem("checkLock");
         if (i == 'unlocked'){
@@ -191,14 +203,9 @@
       // Sets toolar label
       page.querySelector('ons-toolbar .center').innerHTML = websiteName;
 
-      // Checks if page.data.events has already been defined. If it has, it is not redefined
-      if (page.data.events != undefined){
-        var eventArray = page.data.events;
-      }
-
       // Stores date selected in variable
       var store = page.data.title;
-      var theme = localStorage.getItem("theme");
+      var theme = localStorage.getItem("themeColour");
 
       //Creates location for heading to be placed and then sets the heading of page to 'Edit' + the selected day
       page.querySelector('#storeInDb').innerHTML += '<div id="editDayHeading" style="padding-bottom: 12px; text-align: center; font-size: 35px;"></div>';
@@ -286,24 +293,21 @@
         localStorage.setItem(store, JSON.stringify(joined));
 
         // Opens month.html page, passing the website name, theme and events array
-        document.querySelector('#firstPage').pushPage('Month.html', {data: {title: websiteName, theme:theme}});
+        document.querySelector('#firstPage').pushPage('Month.html', {data: {title: websiteName}});
       }
       };
 
       // Navigates the previous page when the back toolbar button is clicked
       page.querySelector('#backEvent').onclick = function() {
-        document.querySelector('#firstPage').pushPage('Day.html', {data: {title: websiteName, theme:theme}});
+        document.querySelector('#firstPage').pushPage('Day.html', {data: {title: websiteName}});
       };
     };
     if (page.id === 'homePage'){
 
-      //stores events array in variable
-      var eventArray = page.data.events;
-
       var printCurrentDate = "";
 
       //Sets background colour to current theme
-      var theme = localStorage.getItem("theme");
+      var theme = localStorage.getItem("themeColour");
       if (theme == "blue"){
         document.body.style.backgroundColor = darkerblue;
       }
@@ -337,28 +341,28 @@
 
       // Edit Day Button is clicked
       page.querySelector('#startEditTheme').onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditTheme.html', {data: {title: websiteName, theme:page.data.theme}});
+        document.querySelector('#firstPage').pushPage('EditTheme.html', {data: {title: websiteName}});
       };
       // View Calender Button is clicked
       page.querySelector('#startCalender').onclick = function() {
-        document.querySelector('#firstPage').pushPage('Month.html', {data: {title: websiteName, theme: page.data.theme}});
+        document.querySelector('#firstPage').pushPage('Month.html', {data: {title: websiteName}});
       };
 
       // When edit day button is clicked
       page.querySelector('#startDay').onclick = function() {
-        document.querySelector('#firstPage').pushPage('Day.html', {data: {title: websiteName, theme: page.data.theme}});
+        document.querySelector('#firstPage').pushPage('Day.html', {data: {title: websiteName}});
       };
     }
     if (page.id === 'Day'){
 
       // gets selected theme and events array
-      var theme = localStorage.getItem("theme");
+      var theme = localStorage.getItem("themeColour");
 
       //sets Middle toolbar label
       page.querySelector('ons-toolbar .center').innerHTML = page.data.title; //Days Title
       // Left toolbar button
       page.querySelector('#backEvent').onclick = function() {
-        document.querySelector('#firstPage').pushPage('homePage.html', {data: {month: selectedMonth, theme: theme}});
+        document.querySelector('#firstPage').pushPage('homePage.html', {data: {month: selectedMonth, }});
       };
 
       var selectedMonth = currentMonth;
@@ -464,103 +468,103 @@
       // Creates an click event for every day in the selected month
       // Uses the title on the 'EditDay.html' to display and store data
       page.querySelector(dates[positionInDatesArray]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "1", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "1"}});
       };
       page.querySelector(dates[positionInDatesArray+1]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "2", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "2"}});
       };
       page.querySelector(dates[positionInDatesArray+2]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "3", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "3"}});
       };
       page.querySelector(dates[positionInDatesArray+3]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "4", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "4"}});
       };
       page.querySelector(dates[positionInDatesArray+4]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "5", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "5"}});
       };
       page.querySelector(dates[positionInDatesArray+5]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "6", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "6"}});
       };
       page.querySelector(dates[positionInDatesArray+6]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "7", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "7"}});
       };
       page.querySelector(dates[positionInDatesArray+7]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "8", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "8"}});
       };
       page.querySelector(dates[positionInDatesArray+8]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "9", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "9"}});
       };
       page.querySelector(dates[positionInDatesArray+9]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "10", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "10"}});
       };
       page.querySelector(dates[positionInDatesArray+10]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "11", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "11"}});
       };
       page.querySelector(dates[positionInDatesArray+11]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "12", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "12"}});
       };
       page.querySelector(dates[positionInDatesArray+12]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "13", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "13"}});
       };
       page.querySelector(dates[positionInDatesArray+13]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "14", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "14"}});
       };
       page.querySelector(dates[positionInDatesArray+14]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "15", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "15"}});
       };
       page.querySelector(dates[positionInDatesArray+15]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "16", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "16"}});
       };
       page.querySelector(dates[positionInDatesArray+16]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "17", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "17"}});
       };
       page.querySelector(dates[positionInDatesArray+17]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "18", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "18"}});
       };
       page.querySelector(dates[positionInDatesArray+18]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "19", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "19"}});
       };
       page.querySelector(dates[positionInDatesArray+19]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "20", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "20"}});
       };
       page.querySelector(dates[positionInDatesArray+20]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "21", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "21"}});
       };
       page.querySelector(dates[positionInDatesArray+21]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "22", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "22"}});
       };
       page.querySelector(dates[positionInDatesArray+22]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "23", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "23"}});
       };
       page.querySelector(dates[positionInDatesArray+23]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "24", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "24"}});
       };
       page.querySelector(dates[positionInDatesArray+24]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "25", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "25"}});
       };
       page.querySelector(dates[positionInDatesArray+25]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "26", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "26"}});
       };
       page.querySelector(dates[positionInDatesArray+26]).onclick = function() {
-        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "27", theme:theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "27"}});
       };
 
       // if the month is February, it stops storing numbers after 28
       if (month[selectedMonth] != "February"){
         page.querySelector(dates[positionInDatesArray+27]).onclick = function() {
-          document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "28", theme:theme, events:eventArray}});
+          document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "28"}});
         };
         page.querySelector(dates[positionInDatesArray+28]).onclick = function() {
-          document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "29", theme:theme, events:eventArray}});
+          document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "29"}});
         };
         // if the month is Jan, Mar, May etc, it stops storing numbers after 30
         if (month[selectedMonth] == "January" || month[selectedMonth] == "March" || month[selectedMonth] == "May" || month[selectedMonth] == "July" || month[selectedMonth] == "August" || month[selectedMonth] == "October" || month[selectedMonth] == "December" )
         {
           page.querySelector(dates[positionInDatesArray+29]).onclick = function() {
-            document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "30", theme:theme, events:eventArray}});
+            document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "30"}});
           };
           page.querySelector(dates[positionInDatesArray+30]).onclick = function() {
-            document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "31", theme:theme, events:eventArray}});
+            document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "31"}});
           };
         }
       }
@@ -570,7 +574,7 @@
         if (selectedMonth != 0){
           selectedMonth--;
           // stores the selected month ie March in variable to be used when code is run again
-          document.querySelector('#firstPage').pushPage('Day.html', {data: {month: selectedMonth, title: '2018 Calender', theme:theme, events:eventArray}});
+          document.querySelector('#firstPage').pushPage('Day.html', {data: {month: selectedMonth, title: '2018 Calender'}});
         }
         else {
           page.querySelector('#dialogBox2').innerHTML = '<div id="hideDayDialogBox" class="alert-dialog-mask"></div><div id="hideDayDialogBox2" class="alert-dialog"><div id="hideDayDialogBox3" class="alert-dialog-container"><div id="hideDayDialogBox4" class="alert-dialog-content">You cannot go back,<br>January is the first month.</div><div id="hideDayDialogBox5" class="alert-dialog-footer"><button id="okButton3" class="alert-dialog-button">Ok</button></div></div></div>';
@@ -600,7 +604,7 @@
         if (selectedMonth != 11){
           selectedMonth++;
           // stores the selected month ie March in variable to be used when code is run again
-          document.querySelector('#firstPage').pushPage('Day.html', {data: {month: selectedMonth, title: '2018 Calender', theme: theme, events:eventArray}});
+          document.querySelector('#firstPage').pushPage('Day.html', {data: {month: selectedMonth, title: '2018 Calender'}});
         }
         else {
           page.querySelector('#dialogBox2').innerHTML = '<div id="hideDayDialogBox6" class="alert-dialog-mask"></div><div id="hideDayDialogBox7" class="alert-dialog"><div id="hideDayDialogBox8" class="alert-dialog-container"><div id="hideDayDialogBox9" class="alert-dialog-content">You cannot go back,<br>January is the first month.</div><div id="hideDayDialogBox10" class="alert-dialog-footer"><button id="okButton4" class="alert-dialog-button">Ok</button></div></div></div>';
@@ -626,8 +630,27 @@
       };
     }
     if (page.id === 'Month'){
+
       //gets selected theme
-      var theme = localStorage.getItem("theme");
+      var theme = localStorage.getItem("themeColour");
+      //Changs the backgroundColor and table/list colour depending on theme
+      if (theme == "pink"){
+        selectedColour = lighterpink;
+        document.body.style.backgroundColor = darkerpink;
+      }
+      else if (theme == "blue"){
+        selectedColour = lighterblue;
+        document.body.style.backgroundColor = darkerblue;
+      }
+      else if (theme == "green"){
+        selectedColour = lightergreen;
+        document.body.style.backgroundColor = darkergreen;
+      }
+      else {
+        selectedColour = lighterpink;
+        document.body.style.backgroundColor = darkerpink;
+      }
+
       var columns = localStorage.getItem("columns");
 
       // Navigates back a month if the month is not January
@@ -635,7 +658,7 @@
         if (selectedMonth != 0){
           selectedMonth--;
           // stores selected month in variable to be passed and used when code is rerun
-          document.querySelector('#firstPage').pushPage('Month.html', {data: {month: selectedMonth, title: '2018 Calender', theme: theme, events:eventArray}});
+          document.querySelector('#firstPage').pushPage('Month.html', {data: {month: selectedMonth, title: '2018 Calender', }});
         }
         else {
           page.querySelector('#dialogBox').innerHTML = '<div id="hideDialogBox" class="alert-dialog-mask"></div><div id="hideDialogBox2" class="alert-dialog"><div id="hideDialogBox3" class="alert-dialog-container"><div id="hideDialogBox4" class="alert-dialog-content">You cannot go back,<br>January is the first month.</div><div id="hideDialogBox5" class="alert-dialog-footer"><button id="okButton" class="alert-dialog-button">Ok</button></div></div></div>';
@@ -665,7 +688,7 @@
         if (selectedMonth != 11){
           selectedMonth++;
           // stores selected month in variable to be passed and used when code is rerun
-          document.querySelector('#firstPage').pushPage('Month.html', {data: {month: selectedMonth, title: '2018 Calender', theme: theme, events:eventArray}});
+          document.querySelector('#firstPage').pushPage('Month.html', {data: {month: selectedMonth, title: '2018 Calender', }});
         }
         else {
           page.querySelector('#dialogBox').innerHTML = '<div id="hideDialogBox6" class="alert-dialog-mask"></div><div id="hideDialogBox7" class="alert-dialog"><div id="hideDialogBox8" class="alert-dialog-container"><div id="hideDialogBox9" class="alert-dialog-content">You cannot go forward,<br>December is the last month.</div><div id="hideDialogBox10" class="alert-dialog-footer"><button id="okButton2" class="alert-dialog-button">Ok</button></div></div></div>';
@@ -695,26 +718,8 @@
 
       // Goes to homepage when user clicks the toolbar back button
       page.querySelector('#backEvent').onclick = function() {
-        document.querySelector('#firstPage').pushPage('homePage.html', {data: {month: selectedMonth, theme: theme}});
+        document.querySelector('#firstPage').pushPage('homePage.html', {data: {month: selectedMonth, }});
       };
-
-      //Changs the backgroundColor and table/list colour depending on theme
-      if (theme == "pink"){
-        selectedColour = lighterpink;
-        document.body.style.backgroundColor = darkerpink;
-      }
-      else if (theme == "blue"){
-        selectedColour = lighterblue;
-        document.body.style.backgroundColor = darkerblue;
-      }
-      else if (theme == "green"){
-        selectedColour = lightergreen;
-        document.body.style.backgroundColor = darkergreen;
-      }
-      else {
-        selectedColour = lighterpink;
-        document.body.style.backgroundColor = darkerpink;
-      }
 
       var selectedMonth = currentMonth;
 
@@ -771,7 +776,7 @@
       var inputDay = "";
 
       var test = false;
-      
+
       var noOfColumns = 3;
       var percentage = 33;
       if (columns == "5"){
@@ -831,9 +836,7 @@
           var todaysFeelings = "";
           var todaysPrint = "";
 
-          //displays data stored in eventArray
           //checks if event in array exists for this day
-
           if (count == inputDay && selectedMonth == inputMonthInt){
 
             if (eventSplit[0] != '')
@@ -967,7 +970,7 @@
       // Sets toolar label
       page.querySelector('ons-toolbar .center').innerHTML = websiteName;
 
-      var theme = localStorage.getItem("theme");
+      var theme = localStorage.getItem("themeColour");
       var columns = localStorage.getItem("columns");
 
       // Stores date selected in variable
@@ -984,7 +987,7 @@
       //Change number of rows on calender
       page.querySelector('#storeInDb').innerHTML += '<div style="padding-left: 4%; padding-bottom: 10px; padding-top:8px;">How many columns would you like on the calender?</div>';
       page.querySelector('#storeInDb').innerHTML += '<div style="padding-left: 4%;"><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="s1" value="3" class="radio-button__input radio-button--material__input" name="s" checked="checked"><div class="radio-button__checkmark radio-button--material__checkmark"></div> 3</label><br><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="s2" value="5" class="radio-button__input radio-button--material__input" name="s"><div class="radio-button__checkmark radio-button--material__checkmark"></div> 5</label>';
-      
+
       //Submit button
       page.querySelector('#storeInDb').innerHTML += '<ons-button id="submitTheme" class="button" style="width: 60%; left: 20%; text-align: center; top: 20px; margin-bottom:20px;">Submit</ons-button>';
 
@@ -998,7 +1001,7 @@
       else if (theme == "green"){
         page.querySelector('#r3').checked = true;
       }
-      
+
       //Checks how many columns is currently selected and changes selected column depending on chosen column value
       if (columns == "3"){
         page.querySelector('#s1').checked = true;
@@ -1021,7 +1024,7 @@
       //stores the theme in variable and passes it to the calender page
       page.querySelector('#submitTheme').onclick = function() {
         var theme = document.querySelector('input[name=r]:checked').value;
-        localStorage.setItem("theme", theme);
+        localStorage.setItem("themeColour", theme);
 
         var columns = document.querySelector('input[name=s]:checked').value;
         localStorage.setItem("columns", columns);
@@ -1031,7 +1034,7 @@
 
       // Navigates the previous page when the back toolbar button is clicked
       page.querySelector('#backEvent').onclick = function() {
-        document.querySelector('#firstPage').pushPage('homePage.html', {data: {title: "2018 Calender", theme: theme, events:eventArray}});
+        document.querySelector('#firstPage').pushPage('homePage.html', {data: {title: "2018 Calender", }});
       };
     };
   });
@@ -1047,7 +1050,7 @@
   <body>
 
   <ons-navigator id="firstPage" page="lock.html"></ons-navigator>
-    
+
     <ons-template id="lock.html">
     <ons-page id="lock">
       <ons-toolbar></ons-toolbar>
@@ -1062,9 +1065,9 @@
           <headingStyle style="font-size: 16px;">The website is </headingStyle>
           <headingStyle style="font-size: 16px;" id="lockedStatus"></headingStyle><br><br>
         </div>
-        <form onsubmit="return validatePassword();" style="width:50%; margin-left:25%; margin-bottom:15px;">
-          <input type="text" style="width:100%;" id="passwrdid" name="passwrdname" class="text-input--underbar" placeholder="Enter a password">
-          <input type="submit" value="Submit" class="button" style="width: 100%; top: 20px;">
+        <form onsubmit="return validatePassword()" style="width:50%; margin-left:25%; margin-bottom:15px;">
+          <input type="password" style="width:100%;" id="passwrdid" name="passwrdname" class="text-input--underbar" placeholder="Enter password">
+          <input type="submit" value="OK" class="button" style="width: 100%; top:20px;">
         </form>
       </p>
     </ons-page>
