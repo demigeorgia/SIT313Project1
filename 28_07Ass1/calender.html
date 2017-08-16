@@ -191,10 +191,18 @@
       page.querySelector('#enterWebsite').onclick = function() {
         var i = localStorage.getItem("checkLock");
         if (i == 'unlocked'){
+          console.log("locked status is " + i);
           document.querySelector('#firstPage').pushPage('homePage.html', {data: {title: websiteName}});
         }
-        else {
+        else if (i == 'locked'){
+          console.log("locked status is " + i);
           alert("Website is locked.");
+        }
+        else {
+          localStorage.setItem("checkLockStatus", 'unlocked');
+          i = localStorage.getItem("checkLockStatus");
+          console.log("locked status is " + i);
+          document.querySelector('#firstPage').pushPage('homePage.html', {data: {title: websiteName}});
         }
       };
     }
