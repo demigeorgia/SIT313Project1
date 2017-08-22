@@ -1,49 +1,1409 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="utf-8"/>
   <link rel="stylesheet" href="css/onsenui.css">
   <link rel="stylesheet" href="css/onsen-css-components.min.css">
   <link rel="stylesheet" href="css/css.css">
   <script src="js/onsenui.min.js"></script>
+  <script src="js/sha256.min.js"></script>
+  <script src="js/jquery-3.2.1.js"></script>
+
   <style>
+
     @font-face { font-family: JandaHappyDay; src: url('fonts/JandaHappyDay.ttf'); }
-    headingStyle { font-size: 60px; font-family: JandaHappyDay, sans-serif; color: white;}
-    
-    .topBox {
-      top:0px;
-      left:0px;
-      position: absolute;
-      width: 100%;
-      height: 44px;
-      background-color: #4d4d4d;
-      opacity: 1;
-    }
-    .headingBox {
-      top:50%;
-      margin-top: -100px;
-      left:50%;
-      margin-left: -225px;
-      position: absolute;
-      width: auto;
-      height: 120px;
-    }
-    .bottomBox {
-      left:0px;
-      position: absolute;
-      width: 100%;
-      height: 44px;
-      bottom:0px;
-      background-color: #4d4d4d;
-      opacity: 1;
-    }
+    headingStyle { font-size: 35px; font-family: JandaHappyDay, sans-serif; color: #333; }
+    td { vertical-align: top; padding: 5px;}
+    table { border-collapse: collapse; }
+    .headingBox { top:50%; margin-top: -100px; left:50%; margin-left: -143px; position: absolute; width: 286px; height: 120px; }
+    .bottomBox { left:0px; position: absolute; width: 100%; height: 44px; bottom:0px; background-color: #4d4d4d; opacity: 1; }
+
   </style>
-</head>
-<body onload="setTimeout(function(){window.location = 'Calender.html';}, 4000)"> 
-  <div class="topBox"></div>
-  <div class="headingBox"style="color:white; text-align:center;">
-    <headingStyle>2018 Calender</headingStyle><br>
-    <headingStyle style="font-size:20px;">Created By Demi Brauer</headingStyle>
-  </div>
-  <div class="bottomBox"></div>
+
+  <script>
+
+    /*function readURL(input) {
+      var currentDay = localStorage.getItem("imageStored");
+      localStorage.setItem("OnePass" + currentDay, input.files);
+      localStorage.setItem("TwoPass" + currentDay, input.files[0]);
+      console.log(input.files + ", " + input.files[0]);
+    }
+
+    function readURLDisplay() {
+      var currentDay = localStorage.getItem("currentDay");
+      var OnePass = localStorage.getItem("OnePass" + currentDay);
+      var TwoPass = localStorage.getItem("TwoPass" + currentDay);
+
+      if (OnePass && TwoPass) {
+        console.log("success: " + currentDay + ", " + OnePass + ", " + TwoPass);
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          console.log("reader.onload success");
+          $('#img'+ currentDay)
+            .attr('src', e.target.result)
+            .width(150)
+            .height(200);
+        };
+        reader.readAsDataURL(TwoPass);
+      }
+      else {
+        console.log("failure: " + currentDay + ", " + OnePass + ", " + TwoPass);
+      }
+    }*/
+
+    function storeJSONData(){
+
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrOne");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrTwo");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrThree");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrFour");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrFive");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrSix");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrSeven");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrEight");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrNine");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrTen");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrEleven");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrTwelve");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrThirteen");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrFourteen");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrFifteen");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrSixteen");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrSeventeen");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrEighteen");
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrNineteen");
+      console.log("Stored items: " + localStorage.getItem("temptemp"));
+
+    }
+
+    function getDataStoreData(url){
+
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var date = JSON.parse(this.responseText);
+            var joined = date.month.concat(',');
+            joined = joined.concat(date.day);
+            joined = joined.concat(',');
+            joined = joined.concat(date.event);
+
+            if (localStorage.getItem("temptemp") != undefined && localStorage.getItem("temptemp") != ""){
+              var items = localStorage.getItem("temptemp");
+              items = items.concat('$$');
+              items = items.concat(joined);
+              localStorage.setItem("temptemp", items);
+            }
+            else {
+              localStorage.setItem("temptemp", joined);
+            }
+        }
+      };
+      xmlhttp.open("GET", url, true);
+      xmlhttp.send();
+    }
+
+    function validatePassword(){
+
+      //Gets user input and stored password
+      var password = document.getElementById("passwrdid").value;
+      var storedpassword = localStorage.getItem("passwordStatus");
+
+      //checks if input is null
+      if (password == ""){
+        alert("Password cannot be blank");
+        return false;
+      }
+
+      //encrypts input using SHA256
+      password = sha256(password);
+
+      if (storedpassword === 'null' || storedpassword == null){
+        //stores encrypted password
+        localStorage.setItem("passwordStatus", password);
+        localStorage.setItem("checkLockStatus", 'locked');
+      }
+      else{
+        //checks if inputted password is the same as the stored password
+        if (password != storedpassword){
+          alert("Password is incorrect");
+        }
+        else{
+          //resets stored password to null so user can unlock website.
+          localStorage.setItem("passwordStatus", 'null');
+          localStorage.setItem("checkLockStatus", 'unlocked');
+        }
+      }
+
+      document.getElementById('lockStatus').innerHTML = localStorage.getItem("checkLockStatus");
+      return false;
+    }
+
+    //Find out how many days there are in each month
+    function GetSelectedMonth(month){
+      if (month == "January" || month == "March" || month == "May" || month == "July" || month == "August" || month == "October" || month == "December" ){
+        daysInMonth = 31;
+      }
+      else if (month == "February"){
+        daysInMonth = 28;
+      }
+      else if (month == "April" || month == "June" || month == "September" || month == "November"){
+        daysInMonth = 30;
+      }
+      else {
+        daysInMonth = 30;
+        console.log("The selected month is not set. The number of days in the month is set to 30.");
+      }
+      return daysInMonth;
+    }
+
+  document.addEventListener('init', function(event) {
+
+    //Sets the locked status to unlocked if local storage has not yet been defined
+    if (localStorage.getItem("checkLockStatus") != undefined){
+      document.getElementById('lockStatus').innerHTML = localStorage.getItem("checkLockStatus");
+    }
+    else {
+      document.getElementById('lockStatus').innerHTML = "unlocked";
+    }
+
+    var date = new Date();
+    var currentMonth = date.getMonth();
+    var currentDate = date.getUTCDate();
+
+    var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var daysOfTheWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+    var dates = [];
+    var dayCount = 0;
+    var dayCountTwo = 1;
+
+    //THEME COLOUS
+    var lighterblue = "#e8f4f8";
+    var lightergreen = "#d1e0d6";
+    var lighterpink = "#fbdbdb";
+
+    var darkerblue = "lightblue";
+    var darkergreen = "#a3c1ad";
+    var darkerpink = "#f39696";
+
+    var hash = "#";
+
+    var block = 'block';
+    var none = 'none';
+
+    // Creates click events name for each day in the list and stores in array
+    for (var i = 1; i < 366; i++) {
+      if (dayCount < 31){ //JAN
+        dates[dayCount] = hash + month[0] + dayCountTwo;
+      }
+      else if (dayCount < 59){ //FEB
+        if (dayCount == 31){dayCountTwo = 1;}
+        dates[dayCount] = hash + month[1] + dayCountTwo;
+      }
+      else if (dayCount < 90){ //MAR
+        if (dayCount == 59){dayCountTwo = 1;}
+        dates[dayCount] = hash + month[2] + dayCountTwo;
+      }
+      else if (dayCount < 120){ //APR
+        if (dayCount == 90){dayCountTwo = 1;}
+        dates[dayCount] = hash + month[3] + dayCountTwo;
+      }
+      else if (dayCount < 151){ //MAY
+        if (dayCount == 120){dayCountTwo = 1;}
+        dates[dayCount] = hash + month[4] + dayCountTwo;
+      }
+      else if (dayCount < 181){ //JUN
+        if (dayCount == 151){dayCountTwo = 1;}
+        dates[dayCount] = hash + month[5] + dayCountTwo;
+      }
+      else if (dayCount < 212){ //JUL
+        if (dayCount == 181){dayCountTwo = 1;}
+        dates[dayCount] = hash + month[6] + dayCountTwo;
+      }
+      else if (dayCount < 243){ //AUG
+        if (dayCount == 212){dayCountTwo = 1;}
+        dates[dayCount] = hash + month[7] + dayCountTwo;
+      }
+      else if (dayCount < 273){ //SEP
+        if (dayCount == 243){dayCountTwo = 1;}
+        dates[dayCount] = hash + month[8] + dayCountTwo;
+      }
+      else if (dayCount < 304){ //OCT
+        if (dayCount == 273){dayCountTwo = 1;}
+        dates[dayCount] = hash + month[9] + dayCountTwo;
+      }
+      else if (dayCount < 334){ //NOV
+        if (dayCount == 304){dayCountTwo = 1;}
+        dates[dayCount] = hash + month[10] + dayCountTwo;
+      }
+      else { //DEC
+        if (dayCount == 334){dayCountTwo = 1;}
+        dates[dayCount] = hash + month[11] + dayCountTwo;
+      }
+      dayCount++;
+      dayCountTwo++;
+    }
+
+    var page = event.target;
+
+    //Store website name to be used as toolbar center text
+    var websiteName = '2018 Calender';
+
+    if (page.id === 'lock'){
+
+       //gets selected theme
+       var theme = localStorage.getItem("themeColour");
+       if (theme == "pink"){
+         document.body.style.backgroundColor = darkerpink;
+       }
+       else if (theme == "blue"){
+         document.body.style.backgroundColor = darkerblue;
+       }
+       else if (theme == "green"){
+         document.body.style.backgroundColor = darkergreen;
+       }
+       else {
+         document.body.style.backgroundColor = darkerpink;
+       }
+
+      page.querySelector('#enterWebsite').onclick = function() {
+        var i = localStorage.getItem("checkLockStatus");
+
+        if (i == 'unlocked'){
+          document.querySelector('#firstPage').pushPage('homePage.html', {data: {title: websiteName}});
+        }
+        else if (i == 'locked'){
+          alert("Website is locked.");
+        }
+        else {
+          localStorage.setItem("checkLockStatus", 'unlocked');
+          i = localStorage.getItem("checkLockStatus");
+          document.querySelector('#firstPage').pushPage('homePage.html', {data: {title: websiteName}});
+        }
+      };
+
+    }
+    if (page.id === 'EditDay'){
+
+      // Sets toolar label
+      page.querySelector('ons-toolbar .center').innerHTML = websiteName;
+
+      // Stores date selected in variable
+      var store = page.data.title;
+      localStorage.setItem("imageStored", store);
+
+      //Creates location for heading to be placed and then sets the heading of page to 'Edit' + the selected day
+      page.querySelector('#storeInLS').innerHTML += '<div id="editDayHeading" style="padding-bottom: 12px; text-align: center; font-size: 35px;"></div>';
+      page.querySelector('#editDayHeading').innerHTML = "Edit Day";
+
+      // Creates input box and sub heading
+      page.querySelector('#storeInLS').innerHTML += '<div style="padding-left: 4%; padding-bottom: 10px; padding-top: 20px;">How are you feeling today (14 character limit)</div>';
+      page.querySelector('#storeInLS').innerHTML += '<input type="text" style="width:92%; margin-left:4%;" id="textInputTwo" name="textInputTwo" class="text-input--underbar" maxlength="14">';
+
+      // Creates input box and sub heading
+      page.querySelector('#storeInLS').innerHTML += '<div style="padding-left: 4%; padding-bottom: 10px; padding-top: 20px;">Is there any important event on today? (14 character limit)</div>';
+      page.querySelector('#storeInLS').innerHTML += '<input type="text" style="width:92%; margin-left:4%;" id="textInputThree" name="textInputThree" class="text-input--underbar" maxlength="14">';
+
+      // Creates select box and sub heading
+      page.querySelector('#storeInLS').innerHTML += '<div style="padding-left: 4%; padding-bottom: 10px; padding-top: 20px;">Would you like to include an image?</div>';
+      page.querySelector('#storeInLS').innerHTML += '<ons-select style="padding-left: 4%; padding-bottom: 10px; width:92%;" id="choose-sel" ><option value="0">No image</option><option value="1">Heart</option><option value="2">Horse</option><option value="3">Model</option><option value="4">Movie Camera</option><option value="5">Firework</option><option value="6">Market</option><option value="7">Motorbike</option><option value="8">Racing Car</option></ons-select><br><br>';
+
+      //Upload image Api
+      page.querySelector('#storeInLS').innerHTML += '<div style="padding-left: 4%; padding-bottom: 10px; padding-bottom: 20px;"><input type="file" id="passURL'+ store +'" onchange="readURL(this)"></div>';
+
+      // Creates button which links loads storeCalanderEdit.php to store data inputted
+      page.querySelector('#storeInLS').innerHTML += '<input id="selectButton" class="button" type="submit" value="Submit" style="width: 60%; left: 20%; text-align: center; top: 20px; margin-bottom:20px;">';
+
+      // Navigates the previous page when the back toolbar button is clicked
+      page.querySelector('#selectButton').onclick = function() {
+
+        var input = page.querySelector('#textInputThree').value;
+        var feeling = page.querySelector('#textInputTwo').value;
+        var dropdown = page.querySelector('#choose-sel').value;
+        var image = '';
+
+        //checks if only image is selted
+        if (input == '' && feeling == '' && dropdown != '0'){
+          page.querySelector('#dialogBox3').innerHTML = '<div id="hideEditDayDialogBox" class="alert-dialog-mask"></div><div id="hideEditDayDialogBox2" class="alert-dialog"><div id="hideEditDayDialogBox3" class="alert-dialog-container"><div id="hideEditDayDialogBox4" class="alert-dialog-content">You cannot only select an image.</div><div id="hideEditDayDialogBox5" class="alert-dialog-footer"><button id="okButton5" class="alert-dialog-button">Ok</button></div></div></div>';
+
+          //Displays hidden dialog box
+          document.querySelector('#hideEditDayDialogBox').style.display = block;
+          document.querySelector('#hideEditDayDialogBox2').style.display = block;
+          document.querySelector('#hideEditDayDialogBox3').style.display = block;
+          document.querySelector('#hideEditDayDialogBox4').style.display = block;
+          document.querySelector('#hideEditDayDialogBox5').style.display = block;
+          document.querySelector('#okButton5').style.display = block;
+
+          page.querySelector('#okButton5').onclick = function() { //Hides dialog box
+            document.querySelector('#hideEditDayDialogBox').style.display = none;
+            document.querySelector('#hideEditDayDialogBox2').style.display = none;
+            document.querySelector('#hideEditDayDialogBox3').style.display = none;
+            document.querySelector('#hideEditDayDialogBox4').style.display = none;
+            document.querySelector('#hideEditDayDialogBox5').style.display = none;
+            document.querySelector('#okButton5').style.display = none;
+          };
+        }
+        else {
+          if (dropdown == 0){
+            if (dropdown == '1'){
+              image = '<img src="images/heart.png" alt="Heart" class="monthImages" style="height:55px;">';
+            }
+            else if (dropdown == '2'){
+              image = '<img src="images/horse.png" alt="Horse" class="monthImages" style="height:50px;">';
+            }
+            else if (dropdown == '3'){
+              image = '<img src="images/fashion.png" alt="Model" class="monthImages" style="height:55px;">';
+            }
+            else if (dropdown == '4'){
+              image = '<img src="images/film.png" alt="Movie Camera" class="monthImages" style="height:40px;">';
+            }
+            else if (dropdown == '5'){
+              image = '<img src="images/firework.png" alt="Firework" class="monthImages" style="height:63px;">';
+            }
+            else if (dropdown == '6'){
+              image = '<img src="images/market.png" alt="Market" class="monthImages" style="height:50px;">';
+            }
+            else if (dropdown == '7'){
+              image = '<img src="images/bike.png" alt="Motorbile" class="monthImages" style="height:50px; margin-right:0px;">';
+            }
+            else if (dropdown == '8'){
+              image = '<img src="images/car.png" alt="Racing Car" class="monthImages" style="width:65px;">';
+            }
+            else if (dropdown != '0') {
+              console.log("Error: Image selected does not exist. Image is set to ''");
+            }
+          }
+          else {
+            alert("You cannot selected an image and upload a file");
+          }
+
+          var joined = input.concat(','); // adds , to end of input
+          joined = joined.concat(store); //adds store
+          joined = joined.concat(','); // adds ,
+          joined = joined.concat(feeling); // adds feeling
+          joined = joined.concat(','); // adds ,
+          joined = joined.concat(image); // adds image
+
+          localStorage.setItem("local" + store, JSON.stringify(joined));
+
+          // Opens month.html page, passing the website name, theme and events array
+          document.querySelector('#firstPage').pushPage('Month.html');
+
+        }
+      };
+
+      // Navigates the previous page when the back toolbar button is clicked
+      page.querySelector('#backEvent').onclick = function() {
+        document.querySelector('#firstPage').pushPage('Day.html');
+      };
+
+    };
+    if (page.id === 'homePage'){
+
+      var printCurrentDate = "";
+
+      //Sets background colour to current theme
+      var theme = localStorage.getItem("themeColour");
+      if (theme == "blue"){
+        document.body.style.backgroundColor = darkerblue;
+      }
+      else if (theme == "green"){
+        document.body.style.backgroundColor = darkergreen;
+      }
+      else {
+        document.body.style.backgroundColor = darkerpink;
+      }
+
+      //Finds out what ending each number should have e.g. 1st 2nd 3rd
+      var j = currentDate % 10;
+      var k = currentDate % 100;
+
+      if (j == 1 && k != 11) {
+        printCurrentDate = currentDate + "st";
+      }
+      else if (j == 2 && k != 12) {
+        printCurrentDate = currentDate + "nd";
+      }
+      else if (j == 3 && k != 13) {
+        printCurrentDate = currentDate + "rd";
+      }
+      else {
+        printCurrentDate = currentDate + "th";
+      }
+
+      //Stores string on homepage to display curect date
+      var todaysDate = "Todays date is the " + printCurrentDate + " of " + month[currentMonth];
+      page.querySelector('#todaysDate').innerHTML = todaysDate;
+
+      // Edit Day button click event
+      page.querySelector('#startEditTheme').onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditTheme.html', {data: {title: websiteName}});
+      };
+      // View Calender button click event
+      page.querySelector('#startCalender').onclick = function() {
+        document.querySelector('#firstPage').pushPage('Month.html', {data: {title: websiteName}});
+      };
+
+      // edit day button click event
+      page.querySelector('#startDay').onclick = function() {
+        document.querySelector('#firstPage').pushPage('Day.html', {data: {title: websiteName}});
+      };
+
+      //view dates button click event
+      page.querySelector('#startViewDates').onclick = function() {
+        document.querySelector('#firstPage').pushPage('CalenderDates.html', {data: {title: websiteName}});
+      };
+
+    }
+    if (page.id === 'CalenderDates'){
+
+      storeJSONData();
+
+      var data = localStorage.getItem("temptemp");
+      var dataArray = data.split('$$');
+
+      //add strings to array that aren't repeated
+      var uniqueNames = [];
+      $.each(dataArray, function(i, el){
+          if($.inArray(el, uniqueNames) === -1) {
+            uniqueNames.push(el);
+          }
+      });
+
+      var joined = "";
+      for (var i = 0; i < uniqueNames.length; i++) {
+        joined = joined.concat("$$");
+        joined = joined.concat(uniqueNames[i]);
+      }
+
+      dataArray = joined.split('$$');
+
+      var viewMonths = [];
+      var viewDays = [];
+      var viewEvents = [];
+
+      for (var i = 0; i < 19; i++) {
+        var split = dataArray[i].split(',');
+        viewMonths.push(split[0]);
+        viewDays.push(split[1]);
+        viewEvents.push(split[2]);
+      }
+
+      var tableBackgroundColour = "";
+      var tableHeadingColour = "";
+      var theme = localStorage.getItem("themeColour");
+      if (theme == "pink"){
+        tableBackgroundColour = lighterpink;
+        tableHeadingColour = darkerpink;
+      }
+      else if (theme == "blue"){
+        tableBackgroundColour = lighterblue;
+        tableHeadingColour = darkerblue;
+      }
+      else if (theme == "green"){
+        tableBackgroundColour = lightergreen;
+        tableHeadingColour = darkergreen;
+      }
+      else {
+        tableBackgroundColour = lighterpink;
+        tableHeadingColour = darkerpink;
+      }
+
+      var colour = "";
+      var table = '<table style="width:100%;">';
+      table += '<tr style="background-color: '+ tableBackgroundColour +'; font-size: 18px;"><td style="width:33%; padding-left:20px;">Month</td><td style="width:33%;">Day</td><td style="width:33%; padding-right:20px;">Event</td></tr>';
+
+      for (var i = 0; i < viewMonths.length; i++) {
+        if (i % 2 === 0){ colour = tableBackgroundColour; }
+        else { colour = "white"; }
+        if (viewMonths[i] != ""){
+          table += '<tr style="background-color: '+ colour +';"><td style="width:20%; padding-left:20px;">'+ viewMonths[i] +'</td><td style="width:20%;">'+ viewDays[i] +'</td><td style="padding-right:20px;">'+ viewEvents[i] +'</td></tr>';
+        }
+      }
+
+      page.querySelector('#displayDates').innerHTML += table;
+
+      //Toolbar back buttom
+      page.querySelector('#backEvent').onclick = function() {
+        document.querySelector('#firstPage').popPage();
+      };
+
+    }
+    if (page.id === 'Day'){
+
+      // gets selected theme and events array
+      var theme = localStorage.getItem("themeColour");
+      if (theme == "blue"){
+        selectedColour = lighterblue;
+        document.body.style.backgroundColor = darkerblue;
+      }
+      else if (theme == "green"){
+        selectedColour = lightergreen;
+        document.body.style.backgroundColor = darkergreen;
+      }
+      else {
+        selectedColour = lighterpink;
+        document.body.style.backgroundColor = darkerpink;
+      }
+
+      //sets Middle toolbar label
+      page.querySelector('ons-toolbar .center').innerHTML = page.data.title; //Days Title
+      // Left toolbar button
+      page.querySelector('#backEvent').onclick = function() {
+        document.querySelector('#firstPage').pushPage('homePage.html', {data: {month: selectedMonth, }});
+      };
+
+      var selectedMonth = currentMonth;
+      var positionInDatesArray = 0;
+      var monthSelected = '';
+      var count = 1;
+      var daysInMonth = 0;
+
+      // Checks if this code has already run once or not.
+      // Sets the heading as the currently selected month
+      if (page.data.month === undefined){
+        page.querySelector('#displayMonthDay').innerHTML = month[selectedMonth] + " 2018";
+      }
+      else {
+        // stores the selected month (in number form i.e January == 0, February == 1)
+        selectedMonth = page.data.month;
+        page.querySelector('#displayMonthDay').innerHTML = month[selectedMonth] + " 2018";
+      }
+
+      var colourCount = 0;
+
+      // Finds out how many days there are in the selected month
+      daysInMonth = GetSelectedMonth(month[selectedMonth]);
+
+      // The heading of the page
+      page.querySelector('#dayList').innerHTML += '<div style="font-size: 25px;" id="displayMonth"></div>';
+
+      page.querySelector('#dayList').innerHTML += '<ul>';
+
+      // Creates list item for every day of the selected month
+      for (var i = 0; i < daysInMonth; i++){
+
+        colourCount++;
+
+        if (colourCount % 2 === 0){
+          colour = selectedColour;
+        }
+        else {
+          colour = "white";
+        }
+
+        if (i == currentDate-1){
+          page.querySelector('#dayList').innerHTML += "<li style= 'background-color:"+ colour +"' class='list__item list--inset__item list__item--chevron list__item--tappable'><div id='"+ month[selectedMonth] + (i+1) + "' class='list__item__center'>" + month[selectedMonth] + ", Day " + (i+1) + "  TODAY</div></li>";
+        }
+        else {
+          page.querySelector('#dayList').innerHTML += "<li style= 'background-color:"+ colour +"' class='list__item list--inset__item list__item--chevron list__item--tappable'><div id='"+ month[selectedMonth] + (i+1) + "' class='list__item__center'>" + month[selectedMonth] + ", Day " + (i+1) + "</div></li>";
+        }
+
+      }
+      page.querySelector('#dayList').innerHTML += '</ul>';
+
+      // Selects where the array should start reading information from
+      if (month[selectedMonth] == "January"){
+        positionInDatesArray = 0;
+      }
+      else if (month[selectedMonth] == "February"){
+        positionInDatesArray = 31;
+      }
+      else if (month[selectedMonth] == "March"){
+        positionInDatesArray = 59;
+      }
+      else if (month[selectedMonth] == "April"){
+        positionInDatesArray = 90;
+      }
+      else if (month[selectedMonth] == "May"){
+        positionInDatesArray = 120;
+      }
+      else if (month[selectedMonth] == "June"){
+        positionInDatesArray = 151;
+      }
+      else if (month[selectedMonth] == "July"){
+        positionInDatesArray = 181;
+      }
+      else if (month[selectedMonth] == "August"){
+        positionInDatesArray = 212;
+      }
+      else if (month[selectedMonth] == "September"){
+        positionInDatesArray = 243;
+      }
+      else if (month[selectedMonth] == "October"){
+        positionInDatesArray = 273;
+      }
+      else if (month[selectedMonth] == "November"){
+        positionInDatesArray = 304;
+      }
+      else { //December
+        positionInDatesArray = 334;
+      }
+
+      // Creates an click event for every day in the selected month
+      // Uses the title on the 'EditDay.html' to display and store data
+      page.querySelector(dates[positionInDatesArray]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "1"}});
+      };
+      page.querySelector(dates[positionInDatesArray+1]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "2"}});
+      };
+      page.querySelector(dates[positionInDatesArray+2]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "3"}});
+      };
+      page.querySelector(dates[positionInDatesArray+3]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "4"}});
+      };
+      page.querySelector(dates[positionInDatesArray+4]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "5"}});
+      };
+      page.querySelector(dates[positionInDatesArray+5]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "6"}});
+      };
+      page.querySelector(dates[positionInDatesArray+6]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "7"}});
+      };
+      page.querySelector(dates[positionInDatesArray+7]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "8"}});
+      };
+      page.querySelector(dates[positionInDatesArray+8]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "9"}});
+      };
+      page.querySelector(dates[positionInDatesArray+9]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "10"}});
+      };
+      page.querySelector(dates[positionInDatesArray+10]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "11"}});
+      };
+      page.querySelector(dates[positionInDatesArray+11]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "12"}});
+      };
+      page.querySelector(dates[positionInDatesArray+12]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "13"}});
+      };
+      page.querySelector(dates[positionInDatesArray+13]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "14"}});
+      };
+      page.querySelector(dates[positionInDatesArray+14]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "15"}});
+      };
+      page.querySelector(dates[positionInDatesArray+15]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "16"}});
+      };
+      page.querySelector(dates[positionInDatesArray+16]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "17"}});
+      };
+      page.querySelector(dates[positionInDatesArray+17]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "18"}});
+      };
+      page.querySelector(dates[positionInDatesArray+18]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "19"}});
+      };
+      page.querySelector(dates[positionInDatesArray+19]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "20"}});
+      };
+      page.querySelector(dates[positionInDatesArray+20]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "21"}});
+      };
+      page.querySelector(dates[positionInDatesArray+21]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "22"}});
+      };
+      page.querySelector(dates[positionInDatesArray+22]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "23"}});
+      };
+      page.querySelector(dates[positionInDatesArray+23]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "24"}});
+      };
+      page.querySelector(dates[positionInDatesArray+24]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "25"}});
+      };
+      page.querySelector(dates[positionInDatesArray+25]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "26"}});
+      };
+      page.querySelector(dates[positionInDatesArray+26]).onclick = function() {
+        document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "27"}});
+      };
+
+      // if the month is February, it stops storing numbers after 28
+      if (month[selectedMonth] != "February"){
+        page.querySelector(dates[positionInDatesArray+27]).onclick = function() {
+          document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "28"}});
+        };
+        page.querySelector(dates[positionInDatesArray+28]).onclick = function() {
+          document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "29"}});
+        };
+        // if the month is Jan, Mar, May etc, it stops storing numbers after 30
+        if (month[selectedMonth] == "January" || month[selectedMonth] == "March" || month[selectedMonth] == "May" || month[selectedMonth] == "July" || month[selectedMonth] == "August" || month[selectedMonth] == "October" || month[selectedMonth] == "December" )
+        {
+          page.querySelector(dates[positionInDatesArray+29]).onclick = function() {
+            document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "30"}});
+          };
+          page.querySelector(dates[positionInDatesArray+30]).onclick = function() {
+            document.querySelector('#firstPage').pushPage('EditDay.html', {data: {title: month[selectedMonth] + "31"}});
+          };
+        }
+      }
+
+      // Navigates to the previous month if the month is not January
+      page.querySelector('#backMonthInDays').onclick = function() {
+        if (selectedMonth != 0){
+          selectedMonth--;
+          // stores the selected month ie March in variable to be used when code is run again
+          document.querySelector('#firstPage').pushPage('Day.html', {data: {month: selectedMonth, title: '2018 Calender'}});
+        }
+        else {
+          page.querySelector('#dialogBox2').innerHTML = '<div id="hideDayDialogBox" class="alert-dialog-mask"></div><div id="hideDayDialogBox2" class="alert-dialog"><div id="hideDayDialogBox3" class="alert-dialog-container"><div id="hideDayDialogBox4" class="alert-dialog-content">You cannot go back,<br>January is the first month.</div><div id="hideDayDialogBox5" class="alert-dialog-footer"><button id="okButton3" class="alert-dialog-button">Ok</button></div></div></div>';
+
+          //Displays hidden dialog box
+          document.querySelector('#hideDayDialogBox').style.display = block;
+          document.querySelector('#hideDayDialogBox2').style.display = block;
+          document.querySelector('#hideDayDialogBox3').style.display = block;
+          document.querySelector('#hideDayDialogBox4').style.display = block;
+          document.querySelector('#hideDayDialogBox5').style.display = block;
+          document.querySelector('#okButton3').style.display = block;
+
+          page.querySelector('#okButton3').onclick = function() {
+            //Hides dialog box
+            document.querySelector('#hideDayDialogBox').style.display = none;
+            document.querySelector('#hideDayDialogBox2').style.display = none;
+            document.querySelector('#hideDayDialogBox3').style.display = none;
+            document.querySelector('#hideDayDialogBox4').style.display = none;
+            document.querySelector('#hideDayDialogBox5').style.display = none;
+            document.querySelector('#okButton3').style.display = none;
+          };
+        }
+      };
+
+      // Navigates to the following month if the month is not December
+      page.querySelector('#forwardMonthInDays').onclick = function() {
+        if (selectedMonth != 11){
+          selectedMonth++;
+          // stores the selected month ie March in variable to be used when code is run again
+          document.querySelector('#firstPage').pushPage('Day.html', {data: {month: selectedMonth, title: '2018 Calender'}});
+        }
+        else {
+          page.querySelector('#dialogBox2').innerHTML = '<div id="hideDayDialogBox6" class="alert-dialog-mask"></div><div id="hideDayDialogBox7" class="alert-dialog"><div id="hideDayDialogBox8" class="alert-dialog-container"><div id="hideDayDialogBox9" class="alert-dialog-content">You cannot go back,<br>January is the first month.</div><div id="hideDayDialogBox10" class="alert-dialog-footer"><button id="okButton4" class="alert-dialog-button">Ok</button></div></div></div>';
+
+          //Displays hidden dialog box
+          document.querySelector('#hideDayDialogBox6').style.display = block;
+          document.querySelector('#hideDayDialogBox7').style.display = block;
+          document.querySelector('#hideDayDialogBox8').style.display = block;
+          document.querySelector('#hideDayDialogBox9').style.display = block;
+          document.querySelector('#hideDayDialogBox10').style.display = block;
+          document.querySelector('#okButton4').style.display = block;
+
+          page.querySelector('#okButton4').onclick = function() {
+            //Hides dialog box
+            document.querySelector('#hideDayDialogBox6').style.display = none;
+            document.querySelector('#hideDayDialogBox7').style.display = none;
+            document.querySelector('#hideDayDialogBox8').style.display = none;
+            document.querySelector('#hideDayDialogBox9').style.display = none;
+            document.querySelector('#hideDayDialogBox10').style.display = none;
+            document.querySelector('#okButton4').style.display = none;
+          };
+        }
+      };
+    }
+    if (page.id === 'Month'){
+
+      //gets selected theme
+      var theme = localStorage.getItem("themeColour");
+      if (theme == "pink"){
+        selectedColour = lighterpink;
+        document.body.style.backgroundColor = darkerpink;
+      }
+      else if (theme == "blue"){
+        selectedColour = lighterblue;
+        document.body.style.backgroundColor = darkerblue;
+      }
+      else if (theme == "green"){
+        selectedColour = lightergreen;
+        document.body.style.backgroundColor = darkergreen;
+      }
+      else {
+        selectedColour = lighterpink;
+        document.body.style.backgroundColor = darkerpink;
+      }
+
+      var columns = localStorage.getItem("columns");
+
+      // Navigates back a month if the month is not January
+      page.querySelector('#backMonth').onclick = function() {
+        if (selectedMonth != 0){ // stores selected month in variable to be passed and used when code is rerun
+          selectedMonth--;
+          document.querySelector('#firstPage').pushPage('Month.html', {data: {month: selectedMonth, title: '2018 Calender', }});
+        }
+        else {
+          page.querySelector('#dialogBox').innerHTML = '<div id="hideDialogBox" class="alert-dialog-mask"></div><div id="hideDialogBox2" class="alert-dialog"><div id="hideDialogBox3" class="alert-dialog-container"><div id="hideDialogBox4" class="alert-dialog-content">You cannot go back,<br>January is the first month.</div><div id="hideDialogBox5" class="alert-dialog-footer"><button id="okButton" class="alert-dialog-button">Ok</button></div></div></div>';
+
+          //Displays hidden dialog box
+          document.querySelector('#hideDialogBox').style.display = block;
+          document.querySelector('#hideDialogBox2').style.display = block;
+          document.querySelector('#hideDialogBox3').style.display = block;
+          document.querySelector('#hideDialogBox4').style.display = block;
+          document.querySelector('#hideDialogBox5').style.display = block;
+          document.querySelector('#okButton').style.display = block;
+
+          page.querySelector('#okButton').onclick = function() { //Hides dialog box
+            document.querySelector('#hideDialogBox').style.display = none;
+            document.querySelector('#hideDialogBox2').style.display = none;
+            document.querySelector('#hideDialogBox3').style.display = none;
+            document.querySelector('#hideDialogBox4').style.display = none;
+            document.querySelector('#hideDialogBox5').style.display = none;
+            document.querySelector('#okButton').style.display = none;
+          };
+        }
+      };
+
+      // Navigates forward a month if the month is not December
+      page.querySelector('#forwardMonth').onclick = function() {
+        if (selectedMonth != 11){
+          selectedMonth++;
+          // stores selected month in variable to be passed and used when code is rerun
+          document.querySelector('#firstPage').pushPage('Month.html', {data: {month: selectedMonth, title: '2018 Calender', }});
+        }
+        else {
+          page.querySelector('#dialogBox').innerHTML = '<div id="hideDialogBox6" class="alert-dialog-mask"></div><div id="hideDialogBox7" class="alert-dialog"><div id="hideDialogBox8" class="alert-dialog-container"><div id="hideDialogBox9" class="alert-dialog-content">You cannot go forward,<br>December is the last month.</div><div id="hideDialogBox10" class="alert-dialog-footer"><button id="okButton2" class="alert-dialog-button">Ok</button></div></div></div>';
+
+          //Displays hidden dialog box
+          document.querySelector('#hideDialogBox6').style.display = block;
+          document.querySelector('#hideDialogBox7').style.display = block;
+          document.querySelector('#hideDialogBox8').style.display = block;
+          document.querySelector('#hideDialogBox9').style.display = block;
+          document.querySelector('#hideDialogBox10').style.display = block;
+          document.querySelector('#okButton2').style.display = block;
+
+          page.querySelector('#okButton2').onclick = function() { //Hides dialog box
+            document.querySelector('#hideDialogBox6').style.display = none;
+            document.querySelector('#hideDialogBox7').style.display = none;
+            document.querySelector('#hideDialogBox8').style.display = none;
+            document.querySelector('#hideDialogBox9').style.display = none;
+            document.querySelector('#hideDialogBox10').style.display = none;
+            document.querySelector('#okButton2').style.display = none;
+          };
+        }
+      };
+
+      // Sets toolar label
+      page.querySelector('ons-toolbar .center').innerHTML = websiteName;
+
+      // Goes to homepage when user clicks the toolbar back button
+      page.querySelector('#backEvent').onclick = function() {
+        document.querySelector('#firstPage').pushPage('homePage.html', {data: {month: selectedMonth, }});
+      };
+
+      var selectedMonth = currentMonth;
+
+      // Checks if this code has already run once or not.
+      // Sets the heading as the currently selected month
+      if (page.data.month === undefined){
+        page.querySelector('#displayMonth').innerHTML = month[selectedMonth] + " 2018";
+      }
+      else {
+        // sets the selectedMonth variable to the current month
+        selectedMonth = page.data.month;
+        page.querySelector('#displayMonth').innerHTML = month[selectedMonth] + " 2018";
+      }
+
+      var count = 1;
+      table = '';
+
+      // Finds out how many days there are in the selected month
+      var daysInMonth = GetSelectedMonth(month[selectedMonth]);
+
+      // Stores table in variable
+      table += '<table style="width: 100%;border-collapse: collapse; margin-top: 20px; border-bottom: 1px solid white;" >';
+      table += '<div style="font-size: 50px;" id="displayMonth"></div>';
+
+      var weekday = 0;
+
+      // Finds out what day the selected month should start on
+      if (selectedMonth == 0 || selectedMonth == 9){ weekDay = 0; }
+      else if (selectedMonth == 1 || selectedMonth == 2 || selectedMonth == 10){ weekDay = 3; }
+      else if (selectedMonth == 3 || selectedMonth == 6){ weekDay = 6; }
+      else if (selectedMonth == 4){ weekDay = 1; }
+      else if (selectedMonth == 5){ weekDay = 4; }
+      else if (selectedMonth == 7){ weekDay = 2; }
+      else if (selectedMonth == 8 || selectedMonth == 11){ weekDay = 5; }
+      else {
+        console.log("Error: selected month is not specified. Weekday is set to Monday.");
+      }
+
+      var colourCount = 0;
+      var colour = "";
+      var elementPosition = 0;
+      var inputMonth = "";
+      var inputDay = "";
+      var passDay = "";
+
+      var test = false;
+
+      var noOfColumns = 3;
+      var percentage = 33;
+      if (columns == "5"){
+        noOfColumns = 5;
+        percentage = 20;
+      }
+      else if (columns == "3"){
+        noOfColumns = 3;
+        percentage = 33;
+      }
+      else {
+        noOfColumns = 3;
+        percentage = 33;
+      }
+
+      // Creates 8 rows and 4 columns
+      for (var i = 0; i < 11; i++) {
+        table += '<tr>';
+        for (var j = 0; j < noOfColumns; j++) {
+
+          // stops creating elements when there are no more days in the month
+          if (count > daysInMonth){
+            break;
+          }
+
+          table += '<td style="width:' + percentage + '%;">';
+
+          colourCount++;
+
+          //sets the selectedColour as every second elements backgroundColor
+          if (colourCount % 2 === 0){colour = selectedColour;}
+          else {colour = "white";}
+
+          var store = month[selectedMonth] + count;
+
+          if (localStorage.getItem("local" + store) != null) {
+              var retrievedData = localStorage.getItem("local" + store);
+              var eventSplit = retrievedData.split(',');
+              eventSplit[0] = eventSplit[0].substring(1);
+              if (eventSplit[3] != undefined){
+                eventSplit[3] = eventSplit[3].substring(0, eventSplit[3].length - 1);
+                eventSplit[3] = eventSplit[3].replace(/\\/g, '');
+              }
+              passDay = eventSplit[1];
+              localStorage.setItem("currentDay", passDay);
+              inputDay = eventSplit[1].replace(/[^0-9]/g, '');
+          }
+          else {
+            localStorage.setItem("currentDay", '');
+          }
+
+          //Checks what number the selected month is i.e. Jan is 0, Feb is 1
+          var inputMonthInt = 0;
+          if(month[selectedMonth]      == "January"){inputMonthInt = 0;}
+          else if(month[selectedMonth] == "February"){inputMonthInt = 1;}
+          else if(month[selectedMonth] == "March"){inputMonthInt = 2;}
+          else if(month[selectedMonth] == "April"){inputMonthInt = 3;}
+          else if(month[selectedMonth] == "May"){inputMonthInt = 4;}
+          else if(month[selectedMonth] == "June"){inputMonthInt = 5;}
+          else if(month[selectedMonth] == "July"){inputMonthInt = 6;}
+          else if(month[selectedMonth] == "August"){inputMonthInt = 7;}
+          else if(month[selectedMonth] == "September"){inputMonthInt = 8;}
+          else if(month[selectedMonth] == "October"){inputMonthInt = 9;}
+          else if(month[selectedMonth] == "November"){inputMonthInt = 10;}
+          else if(month[selectedMonth] == "December"){inputMonthInt = 11;}
+
+          var todaysEvent = "";
+          var todaysImage = "";
+          var todaysFeelings = "";
+          var todaysPrint = "";
+
+          //checks if event in array exists for this day
+          if (count == inputDay && selectedMonth == inputMonthInt){
+
+            if (eventSplit[0] != '')
+            {
+              todaysEvent = eventSplit[0].toUpperCase();
+            }
+            else
+            { //sets to default text
+              todaysEvent = "NONE";
+            }
+            if (eventSplit[2] != '')
+            {
+              todaysFeelings = '<br>FEELING:<br>' + eventSplit[2].toUpperCase();
+            }
+            else
+            { //prints nothing
+              todaysFeelings = "";
+            }
+            if (eventSplit[4] != undefined){
+              todaysImage = eventSplit[4];
+            }
+            else {
+              todaysImage = '';
+            }
+          } // changes what's printed in each element depending on what day it is
+          else if (count == currentDate && selectedMonth == currentMonth){
+            todaysPrint = "TODAY";
+            todaysEvent = "NONE";
+          }
+          else if (count == 1 && selectedMonth == 0){
+            todaysEvent = "NEW YEARS DAY";
+          }
+          else if (count == 2 && selectedMonth == 0){
+            todaysEvent = "NEW YEARS HOLIDAY";
+          }
+          else if (count == 26 && selectedMonth == 0){
+            todaysEvent = "AUSTRALIA DAY";
+            todaysImage = '<img src="images/australia.png" alt="Australia" class="monthImages" style="width:70px; height:55px;">';
+          }
+          else if (count == 14 && selectedMonth == 1){
+            todaysEvent = "VALENTINES DAY";
+            todaysImage = '<img src="images/heart.png" alt="Love Heart" class="monthImages" style="height:53px;width:57px;">';
+          }
+          else if ((count == 24 || count == 25 || count == 26) && selectedMonth == 2){
+            todaysEvent = "FORMULA 1 GRAND PRIX";
+            todaysImage = '<img src="images/car.png" alt="Racing Car" class="monthImages" style="height:35px; width:65px;">';
+          }
+          else if (count == 25 && selectedMonth == 3){
+            todaysEvent = "ANZAC DAY";
+            todaysImage = '<img src="images/poppy.png" alt="Anzac Poppy" class="monthImages" style="height:56px;">';
+          }
+          else if (count == 30 && selectedMonth == 3){
+            todaysEvent = "GOOD FRIDAY";
+          }
+          else if (count == 31 && selectedMonth == 3){
+            todaysEvent = "EASTER SATURDAY";
+          }
+          else if (count == 1 && selectedMonth == 4){
+            todaysEvent = "EASTER SUNDAY";
+            todaysImage = '<img src="images/egg.png" alt="Easter Egg" class="monthImages" style="height:55px;">';
+          }
+          else if (count == 2 && selectedMonth == 4){
+            todaysEvent = "EASTER MONDAY";
+          }
+          else if ((count == 2 || count == 9 || count == 16 ) && selectedMonth == 7){
+            todaysEvent = "WINTER NIGHT MARKET";
+            todaysImage = '<img src="images/market.png" alt="Strawberries" class="monthImages" style="height:50px;">';
+          }
+          else if ((count == 1 || count == 2 || count == 3 || count == 4 || count == 5 || count == 6 || count == 7 || count == 8) && selectedMonth == 8){
+            todaysEvent = "SPRING FASHION WEEK";
+            todaysImage = '<img src="images/fashion.png" alt="Model" class="monthImages" style="height:65px; ">';
+          }
+          else if ((count == 20 || count == 21 || count == 22) && selectedMonth == 9){
+            todaysEvent = "AUSTRALIAN MOTORCYCLE GRAND PRIX";
+            todaysImage = '<img src="images/bike.png" alt="Motorbike" class="monthImages" style="height:50px; margin-right:0px;">';
+          }
+          else if (count == 31 && selectedMonth == 9){
+            todaysEvent = "HALLOWEEN";
+            todaysImage = '<img src="images/pumpkin.png" alt="Halloween Pumpkin" class="monthImages" style="height:58px;">';
+          }
+          else if (count == 4 && selectedMonth == 10){
+            todaysEvent = "SPRING RACING CARNIVAL";
+            todaysImage = '<img src="images/horse.png" alt="Running Horse" class="monthImages" style="height:46px;">';
+          }
+          else if (count == 7 && selectedMonth == 10){
+            todaysEvent = "MELBOURNE CUP";
+            todaysImage = '<img src="images/horse.png" alt="Running Horse" class="monthImages" style="height:46px;">';
+          }
+          else if (count == 24 && selectedMonth == 11){
+            todaysEvent = "CHRISTMAS EVE";
+          }
+          else if (count == 25 && selectedMonth == 11){
+            todaysEvent = "CHRISTMAS DAY";
+            todaysImage = '<img src="images/tree.png" alt="Christmas Tree" class="monthImages" style="height:63px;">';
+          }
+          else if (count == 26 && selectedMonth == 11){
+            todaysEvent = "BOXING DAY";
+          }
+          else if (count == 31 && selectedMonth == 11){
+            todaysEvent = "NEW YEARS EVE";
+            todaysImage = '<img src="images/firework.png" alt="Firework" class="monthImages" style="height:63px;">';
+          }
+          else  {
+            todaysEvent = "NONE";
+          }
+
+          localStorage.setItem("currentDay", passDay);
+
+          //creates list item with the selected values
+          table += '<ul style="background-color:'+ colour +'; height: 250px;" class="list list--material"><li class="list__header list__header--material" style"65%;">'+ daysOfTheWeek[weekDay] + ' ' + count + '<div id='+  month[selectedMonth] + count +'></div></li><li class="list__item list__item--material"><div class="list__item--material__center" style="padding: 12px 6px 0px 0px; width:100%;"><div class="list__item__title list__item--material__title"></div><div class="list__item__subtitle list__item--material__ subtitle" style="font-size:12px;" id="' + month[selectedMonth] + count +'">EVENT:<br>'+ todaysEvent + '<br>' + todaysFeelings + '<br><br>' + todaysImage +'<!--<img src="#" alt="Click here" id="img'+ passDay +'" value="" onclick="readURLDisplay()">--></div></div></div></li></ul>';
+
+          table += '</td>';
+
+          weekDay++;
+
+          //if the weekday is sunday, resets it to monday to start the week again
+          if (weekDay == 7){
+            weekDay = 0;
+          }
+          count++;
+        }
+        table += '</tr>';
+      }
+      table += '</table>';
+
+      // Stores table variable in div to display
+      page.querySelector('#tableElements').innerHTML = table;
+
+      var variable = "#" + month[selectedMonth];
+
+    }
+    if (page.id === 'EditTheme'){
+      // Sets toolar label
+      page.querySelector('ons-toolbar .center').innerHTML = websiteName;
+
+      var theme = localStorage.getItem("themeColour");
+      var columns = localStorage.getItem("columns");
+
+      // Stores date selected in variable
+      var store = page.data.title;
+
+      //Creates location for heading to be placed and then sets the heading of page to 'Edit' + the selected day
+      page.querySelector('#storeInLS').innerHTML += '<div id="editThemeHeading" style="style="padding-bottom: 12px; text-align: center; font-size: 35px;"></div>';
+      page.querySelector('#editThemeHeading').innerHTML = "Edit Theme";
+
+      // Creates radio buttons and sub heading
+      page.querySelector('#storeInLS').innerHTML += '<div style="padding-left: 4%; padding-bottom: 10px; padding-top:8px;">What colour theme would you like?</div>';
+      page.querySelector('#storeInLS').innerHTML += '<div style="padding-left: 4%;"><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="r1" value="pink" class="radio-button__input radio-button--material__input" name="r" checked="checked"><div class="radio-button__checkmark radio-button--material__checkmark"></div> Pink</label><br><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="r2" value="blue" class="radio-button__input radio-button--material__input" name="r"><div class="radio-button__checkmark radio-button--material__checkmark"></div> Blue</label><br><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="r3" value="green" class="radio-button__input radio-button--material__input" name="r"><div class="radio-button__checkmark radio-button--material__checkmark"></div> Green</label></div>';
+
+      //Change number of rows on calender
+      page.querySelector('#storeInLS').innerHTML += '<div style="padding-left: 4%; padding-bottom: 10px; padding-top:8px;">How many columns would you like on the calender?</div>';
+      page.querySelector('#storeInLS').innerHTML += '<div style="padding-left: 4%;"><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="s1" value="3" class="radio-button__input radio-button--material__input" name="s" checked="checked"><div class="radio-button__checkmark radio-button--material__checkmark"></div> 3</label><br><label style="padding-bottom:8px;" class="radio-button radio-button--material"><input type="radio" id="s2" value="5" class="radio-button__input radio-button--material__input" name="s"><div class="radio-button__checkmark radio-button--material__checkmark"></div> 5</label>';
+
+      //Submit button
+      page.querySelector('#storeInLS').innerHTML += '<ons-button id="submitTheme" class="button" style="width: 60%; left: 20%; text-align: center; top: 20px; margin-bottom:20px;">Submit</ons-button>';
+
+      //Checks what theme is currently selected and changes selected radio butotn depending on theme
+      if (theme == "pink"){
+        page.querySelector('#r1').checked = true;
+      }
+      else if (theme == "blue"){
+        page.querySelector('#r2').checked = true;
+      }
+      else if (theme == "green"){
+        page.querySelector('#r3').checked = true;
+      }
+      else {
+        page.querySelector('#r1').checked = true;
+        console.log("Error: Theme is incorrect. Set the default theme.");
+      }
+
+      //Checks how many columns is currently selected and changes selected column depending on chosen column value
+      if (columns == "3"){
+        page.querySelector('#s1').checked = true;
+      }
+      if (columns == "5") {
+        page.querySelector('#s2').checked = true;
+      }
+      else {
+        page.querySelector('#s1').checked = true;
+        console.log("Error: Number of columns is not specified. Set the default number of columns.");
+      }
+
+      //Lets users preview the background colour after clicking radio button
+      page.querySelector('#r1').onclick = function() {
+        document.body.style.backgroundColor = darkerpink;
+      }
+      page.querySelector('#r2').onclick = function() {
+        document.body.style.backgroundColor = darkerblue;
+      }
+      page.querySelector('#r3').onclick = function() {
+        document.body.style.backgroundColor = darkergreen;
+      }
+
+      //stores the theme in variable and passes it to the calender page
+      page.querySelector('#submitTheme').onclick = function() {
+        var theme = document.querySelector('input[name=r]:checked').value;
+        localStorage.setItem("themeColour", theme);
+        var columns = document.querySelector('input[name=s]:checked').value;
+        localStorage.setItem("columns", columns);
+        document.querySelector('#firstPage').pushPage('Month.html', {data: {title: "View Day"}});
+      }
+
+      // Navigates the previous page when the back toolbar button is clicked
+      page.querySelector('#backEvent').onclick = function() {
+        document.querySelector('#firstPage').pushPage('homePage.html');
+      };
+    };
+  });
+
+  $( document ).ready(function() {
+    //hides splash screen and displays lock page contents after 4 seconds
+    $( "#pageContents" ).hide();
+    $( "#lockToolbar" ).hide();
+    var explode = function(){
+      $( "#pageContents" ).show();
+      $( "#lockToolbar" ).show();
+      $( "#splashScreen" ).hide();
+    };
+    setTimeout(explode, 4000);
+  });
+
+  </script>
+
+  </head>
+  <body>
+
+  <ons-navigator id="firstPage" page="lock.html"></ons-navigator>
+
+  <ons-template id="lock.html">
+    <ons-page id="lock">
+      <ons-toolbar id="lockToolbar"></ons-toolbar>
+      <div id="splashScreen">
+        <div class="headingBox"style="color:white; text-align:center;">
+          <headingStyle>2018 Calendar</headingStyle>
+          <br><headingStyle style="font-size:20px;">Created By Demi Brauer</headingStyle>
+        </div>
+      </div>
+
+      <div id="pageContents">
+        <p style="padding-left: 20px;">
+          <div style="padding:20px 40px 30px 40px; text-align:center;">
+            <headingStyle style="font-size: 35px;">Welcome to the<br>2018 Calendar</headingStyle><br><br>
+            <div id="map" name="map"></div>
+          </div>
+          <table>
+            <tr>
+              <td style="width:50%; padding: 0px 20px 0px 40px; height:70px;">
+                This calender allows you to keep track of your up coming events and take note of how you're feeling each day.
+              </td>
+              <td style="width:50%; padding: 0px 40px 0px 20px; height:70px;">
+                <headingStyle style="font-size: 16px;">The website is </headingStyle><headingStyle style="font-size: 16px;" id="lockStatus"></headingStyle>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:50%; padding: 20px 20px 0px 40px;">
+                <input type="submit" id="enterWebsite" value="Enter" class="button" style="width:100%; ">
+              </td>
+              <td style="width:50%; padding: 20px 40px 0px 20px;">
+                <form onsubmit="return validatePassword()">
+                  <input type="text" style="width:79%;" id="passwrdid" name="passwrdname" class="text-input--underbar" placeholder="Enter password"><input type="submit" value="OK" class="button" style="width: 19%; margin-left:2%;">
+                </form>
+              </td>
+            </tr>
+          </table>
+        </p>
+      </div>
+    </ons-page>
+  </ons-template>
+
+  <ons-template id="homePage.html">
+    <ons-page id="homePage">
+      <!-- Toolbar center text-->
+      <ons-toolbar>
+        <div class="left" id="logout" style="color: white; padding-left: 8px; cursor: pointer;" onClick="history.go(0)">Lock</div>
+        <div class="center" style="color: white;"></div>
+      </ons-toolbar>
+      <p style="padding-left: 20px;">
+        <div style="padding-top: 20px; padding-bottom: 20px; text-align:center;">
+          <!-- Page heading -->
+          <headingStyle style="font-size: 35px;">2018 Calender</headingStyle><br><br>
+        </div>
+        <div style="left: 0px; top: 0px; border-top: 1px solid black; width: 100%; height: auto; padding-bottom:20px; background-color: white;">
+        <!-- Page introduction -->
+        <div style="text-align: center; font-size: 16px; padding: 0px 30px;">
+          <br>
+            <headingStyle style="font-size: 16px;" id="todaysDate"></headingStyle><br><br>
+          Keep track of upcoming events in Melbourne and Australia using this online<br>easy to use web-based Calender.
+        </div>
+      </div>
+      </p>
+      <!-- Navigation buttons -->
+      <ons-button id="startCalender" class="homePageButtons">View Calender</ons-button>
+      <ons-button id="startEditTheme" class="homePageButtons" style="top: 15px;">Edit Theme</ons-button>
+      <ons-button id="startDay" class="homePageButtons" style="top: 30px;">Edit Day</ons-button>
+      <ons-button id="startViewDates" class="homePageButtons" style="top: 45px;margin-bottom:20px;">View Dates</ons-button>
+    </ons-page>
+  </ons-template>
+
+  <ons-template id="CalenderDates.html">
+    <ons-page id="CalenderDates">
+      <!-- Toolbar center text-->
+      <ons-toolbar>
+        <div class="left" id="backEvent" style="color: white; padding-left: 8px; cursor: pointer;">< Back</div>
+      </ons-toolbar>
+      <p style="padding-left:5px; padding-right:5px;">
+        <div style="padding-top: 20px; padding-bottom:20px; text-align:center;">
+          <!-- Page heading -->
+          <headingStyle style="font-size: 35px;">Calendar Dates</headingStyle>
+          <div id="displayDates" style="margin-top:60px;"></div>
+        </div>
+
+      </p>
+    </ons-page>
+  </ons-template>
+
+  <ons-template id="Month.html">
+    <ons-page id="Month">
+      <ons-toolbar> <!-- Toolbar back button and center text-->
+        <div class="left" id="backEvent" style="color: white; padding-left: 8px; cursor: pointer;">< Back</div>
+        <div class="center" style="color: white;"></div>
+        <button id="backMonth" class="right fab fab--mini" style="cursor: pointer; width:50px; border-radius:0%; margin-top:2px;"><<</button>
+        <button id="forwardMonth" class="right fab fab--mini" style="cursor: pointer; width:50px; border-radius:0%; margin-top:2px;">>></button>
+      </ons-toolbar>
+
+      <!-- Page heading, the current month selected -->
+      <p style="padding-left:5px; padding-right:5px;">
+        <div style="padding-top: 20px; padding-left: 20px; text-align:center;">
+          <!-- Page heading -->
+          <headingStyle id="displayMonth" style="font-size: 35px;"></headingStyle>
+        </div>
+      </p>
+      <!-- Displays days in the current selected month in a table -->
+      <div style="padding-top:20px;" id="tableElements"></div>
+      <div style="z-index: 999;" id="dialogBox"></div>
+    </ons-page>
+  </ons-template>
+
+  <ons-template id="Day.html">
+    <ons-page id="Day">
+      <ons-toolbar> <!-- Toolbar back button and center text-->
+        <div class="left" id="backEvent" style="color: white; padding-left: 8px;">< Back</div>
+        <div class="center" style="color: white;"></div>
+        <button id="backMonthInDays" class="right fab fab--mini" style="cursor: pointer; width:50px; border-radius:0%; margin-top:2px;"><<</button>
+        <button id="forwardMonthInDays" class="right fab fab--mini" style="cursor: pointer; width:50px; border-radius:0%; margin-top:2px;">>></button>
+      </ons-toolbar>
+      <!-- Page heading, the current month selected -->
+      <p style="padding-left:5px; padding-right:5px;">
+        <div style="padding-top: 20px; padding-left: 20px; text-align:center;">
+          <!-- Page heading -->
+          <headingStyle id="displayMonthDay" style="font-size: 50px;"></headingStyle>
+        </div>
+      </p>
+      <!-- Displays a list of days in the current selected month -->
+      <div id="dayList"></div>
+      <div style="z-index: 999;" id="dialogBox2"></div>
+    </ons-page>
+  </ons-template>
+
+  <ons-template id="EditDay.html">
+    <ons-page id="EditDay" ng-controller="Controller">
+      <!-- Toolbar back button and center text-->
+      <ons-toolbar>
+        <div class="left" id="backEvent" style="color: white; padding-left: 8px;  cursor: pointer;">< Back</div>
+        <div class="center" style="color: white;"></div>
+      </ons-toolbar>
+      <p style="padding-left:5px; padding-right:5px;">
+        <div style="padding-top: 20px; padding-left: 20px; text-align:center;">
+          <!-- Page heading -->
+          <headingStyle id="editDayHeading" style="font-size: 50px;"></headingStyle>
+        </div>
+      </p>
+      <!-- Input deviced stored in a form so all data is transfered to storeCalenderEdit.php when the form is submitted-->
+      <div id="storeInLS"></div>
+      <div style="z-index: 999;" id="dialogBox3"></div>
+    </ons-page>
+  </ons-template>
+
+  <ons-template id="EditTheme.html">
+    <ons-page id="EditTheme" ng-controller="Controller">
+      <ons-toolbar> <!-- Toolbar back button and center text-->
+        <div class="left" id="backEvent" style="color: white; padding-left: 8px; cursor: pointer;">< Back</div>
+        <div class="center" style="color: white;"></div>
+      </ons-toolbar>
+      <p style="padding-left:5px; padding-right:5px;">
+        <div style="padding-top: 20px; padding-left: 20px; text-align:center;">
+          <!-- Page heading -->
+          <headingStyle id="editThemeHeading" style="font-size: 50px;">Edit Theme</headingStyle><br><br>
+        </div>
+      </p>
+      <!-- Input deviced stored in a form so all data is transfered to storeCalenderEdit.php when the form is submitted-->
+      <div id="storeInLS"></div>
+    </ons-page>
+  </ons-template>
+
 </body>
 </html>
+
