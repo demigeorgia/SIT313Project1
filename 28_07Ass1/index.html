@@ -456,8 +456,6 @@
     }
     if (page.id === 'CalenderDates'){
 
-      storeJSONData();
-
       var data = localStorage.getItem("temptemp");
       var dataArray = data.split('$$');
 
@@ -1234,7 +1232,7 @@
   </script>
 
   </head>
-  <body>
+  <body onload="storeJSONData();">
 
   <ons-navigator id="firstPage" page="lock.html"></ons-navigator>
 
