@@ -21,62 +21,53 @@
 
   <script>
 
-    /*function readURL(input) {
-      var currentDay = localStorage.getItem("imageStored");
-      localStorage.setItem("OnePass" + currentDay, input.files);
-      localStorage.setItem("TwoPass" + currentDay, input.files[0]);
-      console.log(input.files + ", " + input.files[0]);
-    }
-
-    function readURLDisplay() {
-      var currentDay = localStorage.getItem("currentDay");
-      var OnePass = localStorage.getItem("OnePass" + currentDay);
-      var TwoPass = localStorage.getItem("TwoPass" + currentDay);
-
-      if (OnePass && TwoPass) {
-        console.log("success: " + currentDay + ", " + OnePass + ", " + TwoPass);
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          console.log("reader.onload success");
-          $('#img'+ currentDay)
-            .attr('src', e.target.result)
-            .width(150)
-            .height(200);
-        };
-        reader.readAsDataURL(TwoPass);
-      }
-      else {
-        console.log("failure: " + currentDay + ", " + OnePass + ", " + TwoPass);
-      }
-    }*/
-
     function storeJSONData(){
 
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrOne");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrTwo");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrThree");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrFour");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrFive");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrSix");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrSeven");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrEight");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrNine");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrTen");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrEleven");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrTwelve");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrThirteen");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrFourteen");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrFifteen");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrSixteen");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrSeventeen");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrEighteen");
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrNineteen");
-      console.log("Stored items: " + localStorage.getItem("temptemp"));
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrOne", true);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrTwo", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrThree", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrFour", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrFive", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrSix", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrSeven", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrEight", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrNine", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrTen", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrEleven", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrTwelve", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrThirteen", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrFourteen", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrFifteen", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrSixteen", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrSeventeen", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrEighteen", false);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrNineteen", false);
+      console.log("Stored items: " + localStorage.getItem("storeJSONData"));
 
     }
 
-    function getDataStoreData(url){
+    function getUserPassword(username) {
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function (e) {
+        if (this.readyState == 4 && this.status == 200) {
+          alert("getUserPassword is executed");
+          var result = JSON.parse(xmlhttp.responseText);
+          localStorage.setItem("currentPassword", result.password);
+        }
+      };
+      var url = "http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrPassword" + username;
+      xmlhttp.open("GET", url, true);
+      xmlhttp.send();
+    }
 
+    function setUserPassword(username, password) {
+      var xmlhttp = new XMLHttpRequest();
+      var url = "http://introtoapps.com/datastore.php?action=save&appid=213138082&objectid=dgbrPassword" + username +"&data={%22password%22:%22"+ password +"%22}";
+      xmlhttp.open("GET", url, true);
+      xmlhttp.send();
+    }
+
+    function getDataStoreData(url, result){
       var xmlhttp = new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -86,14 +77,14 @@
             joined = joined.concat(',');
             joined = joined.concat(date.event);
 
-            if (localStorage.getItem("temptemp") != undefined && localStorage.getItem("temptemp") != ""){
-              var items = localStorage.getItem("temptemp");
+            if (localStorage.getItem("storeJSONData") != undefined && localStorage.getItem("storeJSONData") != ""){
+              var items = localStorage.getItem("storeJSONData");
               items = items.concat('$$');
               items = items.concat(joined);
-              localStorage.setItem("temptemp", items);
+              localStorage.setItem("storeJSONData", items);
             }
             else {
-              localStorage.setItem("temptemp", joined);
+              localStorage.setItem("storeJSONData", joined);
             }
         }
       };
@@ -103,37 +94,49 @@
 
     function validatePassword(){
 
+      localStorage.setItem("currentPassword", undefined);
+      localStorage.setItem("currentLockedStatus", 'unlocked');
+
       //Gets user input and stored password
+      var username = document.getElementById("usernameid").value;
       var password = document.getElementById("passwrdid").value;
-      var storedpassword = localStorage.getItem("passwordStatus");
+
+      //get stored datastore password
+      getUserPassword(username);
 
       //checks if input is null
-      if (password == ""){
-        alert("Password cannot be blank");
+      if (password == "" || username == ""){
+        alert("Password and username cannot be blank");
         return false;
       }
 
       //encrypts input using SHA256
       password = sha256(password);
 
-      if (storedpassword === 'null' || storedpassword == null){
-        //stores encrypted password
-        localStorage.setItem("passwordStatus", password);
-        localStorage.setItem("checkLockStatus", 'locked');
+      var storedpassword = localStorage.getItem("currentPassword");
+      alert("storedpassword: " + storedpassword);
+      if (localStorage.getItem("currentPassword") === 'null' || localStorage.getItem("currentPassword") == "" || localStorage.getItem("currentPassword") == null || localStorage.getItem("currentPassword") == undefined || localStorage.getItem("currentPassword") == "undefined"){
+        alert("first set password attempt");
+        setUserPassword(username, password);
+        alert("first set password complete: " + localStorage.getItem("currentPassword"));
+        localStorage.setItem("currentLockedStatus", 'locked');
+
       }
-      else{
-        //checks if inputted password is the same as the stored password
-        if (password != storedpassword){
+      else{ //checks if inputted password is the same as the stored password
+        alert(password + "" + localStorage.getItem("currentPassword"));
+        if (password != localStorage.getItem("currentPassword")){
           alert("Password is incorrect");
         }
         else{
-          //resets stored password to null so user can unlock website.
-          localStorage.setItem("passwordStatus", 'null');
-          localStorage.setItem("checkLockStatus", 'unlocked');
+          alert("second set password attempt");
+          setUserPassword(username, "");
+          alert("second set password complete");
+          localStorage.setItem("currentPassword", "");
+          localStorage.setItem("currentLockedStatus", 'unlocked');
         }
       }
 
-      document.getElementById('lockStatus').innerHTML = localStorage.getItem("checkLockStatus");
+      document.getElementById('lockStatus').innerHTML = localStorage.getItem("currentLockedStatus");
       return false;
     }
 
@@ -158,8 +161,8 @@
   document.addEventListener('init', function(event) {
 
     //Sets the locked status to unlocked if local storage has not yet been defined
-    if (localStorage.getItem("checkLockStatus") != undefined){
-      document.getElementById('lockStatus').innerHTML = localStorage.getItem("checkLockStatus");
+    if (localStorage.getItem("currentLockedStatus") != undefined){
+      document.getElementById('lockStatus').innerHTML = localStorage.getItem("currentLockedStatus");
     }
     else {
       document.getElementById('lockStatus').innerHTML = "unlocked";
@@ -266,7 +269,7 @@
        }
 
       page.querySelector('#enterWebsite').onclick = function() {
-        var i = localStorage.getItem("checkLockStatus");
+        var i = localStorage.getItem("currentLockedStatus");
 
         if (i == 'unlocked'){
           document.querySelector('#firstPage').pushPage('homePage.html', {data: {title: websiteName}});
@@ -275,8 +278,8 @@
           alert("Website is locked.");
         }
         else {
-          localStorage.setItem("checkLockStatus", 'unlocked');
-          i = localStorage.getItem("checkLockStatus");
+          localStorage.setItem("currentLockedStatus", 'unlocked');
+          i = localStorage.getItem("currentLockedStatus");
           document.querySelector('#firstPage').pushPage('homePage.html', {data: {title: websiteName}});
         }
       };
@@ -456,7 +459,7 @@
     }
     if (page.id === 'CalenderDates'){
 
-      var data = localStorage.getItem("temptemp");
+      var data = localStorage.getItem("storeJSONData");
       var dataArray = data.split('$$');
 
       //add strings to array that aren't repeated
@@ -1226,7 +1229,7 @@
       $( "#lockToolbar" ).show();
       $( "#splashScreen" ).hide();
     };
-    setTimeout(explode, 4000);
+    setTimeout(explode, 1000);
   });
 
   </script>
@@ -1259,7 +1262,7 @@
               </td>
               <td style="width:50%; padding: 0px 40px 0px 20px; height:70px;">
                 <headingStyle style="font-size: 16px;">The website is </headingStyle><headingStyle style="font-size: 16px;" id="lockStatus"></headingStyle>
-              </td>
+                </td>
             </tr>
             <tr>
               <td style="width:50%; padding: 20px 20px 0px 40px;">
@@ -1267,7 +1270,9 @@
               </td>
               <td style="width:50%; padding: 20px 40px 0px 20px;">
                 <form onsubmit="return validatePassword()">
-                  <input type="text" style="width:79%;" id="passwrdid" name="passwrdname" class="text-input--underbar" placeholder="Enter password"><input type="submit" value="OK" class="button" style="width: 19%; margin-left:2%;">
+                  <input type="text" style="width:100%; margin-bottom:10px;" id="usernameid" name="username" class="text-input--underbar" placeholder="Enter Username">
+                  <input type="text" style="width:100%; margin-bottom:10px;" id="passwrdid" name="passwrdname" class="text-input--underbar" placeholder="Enter password">
+                  <input type="submit" value="OK" class="button" style="width: 100%;">
                 </form>
               </td>
             </tr>
@@ -1404,4 +1409,3 @@
 
 </body>
 </html>
-
