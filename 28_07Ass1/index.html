@@ -319,8 +319,41 @@
       // Navigates the previous page when the back toolbar button is clicked
       page.querySelector('#selectButton').onclick = function() {
 
+        //Convert characters that are not letters into unicode so the string can be stored in the datastore
         var input = page.querySelector('#textInputThree').value;
+        var chars = input.split('');
+        var joinedStr = "";
+        for (var position = 0; position < chars.length; position++)
+        {
+            var letter = chars[position];
+            if (!letter.match(/[a-z]/i)){
+              var character = letter.codePointAt(0);
+              chars[position] = "%".concat(character);
+              joinedStr = joinedStr.concat(chars[position]);
+            }
+            else {
+              joinedStr = joinedStr.concat(letter);
+            }
+        }
+        input = joinedStr;
+
         var feeling = page.querySelector('#textInputTwo').value;
+        chars = feeling.split('');
+        joinedStr = "";
+        for (var position = 0; position < chars.length; position++)
+        {
+            var letter = chars[position];
+            if (!letter.match(/[a-z]/i)){
+              var character = letter.codePointAt(0);
+              chars[position] = "%".concat(character);
+              joinedStr = joinedStr.concat(chars[position]);
+            }
+            else {
+              joinedStr = joinedStr.concat(letter);
+            }
+        }
+        feeling = joinedStr;
+        
         var dropdown = page.querySelector('#choose-sel').value;
         var image = '';
 
