@@ -1,4 +1,4 @@
-websiteName<html lang="en">
+<html lang="en">
 <head>
   <meta charset="utf-8"/>
   <link rel="stylesheet" href="css/onsenui.css">
@@ -41,10 +41,10 @@ websiteName<html lang="en">
 
     //PAGE NAMES
     var v_EditDay = 'EditDay.html';
-    var p_viewMonth = 'Month.html';
-    var p_viewDay = 'Day.html';
-    var p_viewHomePage = 'homePage.html';
-    var p_viewEditTheme = 'EditTheme.html';
+    var p_Month = 'Month.html';
+    var p_Day = 'Day.html';
+    var p_HomePage = 'homePage.html';
+    var p_EditTheme = 'EditTheme.html';
 
     //LOCAL STORAGE NAMES
     var storeJSONData = "storeJSONData";
@@ -66,7 +66,7 @@ websiteName<html lang="en">
     var get = "GET";
 
     //LOAD ALL CALENDER EVENTS FROM DATASTORE
-    function storeJSONData(){
+    function storeData(){
 
       //CLEARS LOCAL STORAGE
       localStorage.setItem(storeJSONData, emptyString);
@@ -93,11 +93,53 @@ websiteName<html lang="en">
       getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrEighteen");
       getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbrNineteen");
 
-      //USER CUSTOM INPUT
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbr" + 1);
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbr" + 2);
-      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbr" + 3);
+      ////////////STORE LOCAL STORAGE INTO DATASTORE WHEN USER CLICKS SUBMIT
+      var test = true;
+      var counter = 1;
+      while (test == true){
+        var loadUrl = "http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbr" + counter;
+        if(findEmptySlot(loadUrl)) {
+          counter++;
+          getDataStoreData(loadUrl);
+        }
+        else {
+          console.log("Custom input: " + (counter-1));
+          test = false;
+        }
+      }
 
+      //USER CUSTOM INPUT
+      /*getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbr" + 3);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbr" + 2);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbr" + 1);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbr" + 4);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbr" + 5);
+      getDataStoreData("http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbr" + 6);*/
+
+    }
+
+    function findEmptySlot(testUrl){
+      var http = jQuery.ajax({
+        type:"HEAD", //Not get
+        url: testUrl,
+        async: false
+      })
+      return http.status!=404;
+    }
+
+    function storeUserInput(input){
+      input = input.replace(/["']/g, "");
+      var inputArray = input.split(comma);
+      for (var i = 1; i < 10; i++) {
+        var loadUrl = "http://introtoapps.com/datastore.php?action=load&appid=213138082&objectid=dgbr" + i;
+        if(!findEmptySlot(loadUrl)) {
+          var storeUrl = "http://introtoapps.com/datastore.php?action=save&appid=213138082&objectid=dgbr" + i +"&data={%22month%22:%22" + inputArray[1] + "%22,%22day%22:%22" + inputArray[0] + "%22,%22event%22:%22" + inputArray[2] + "%22, %22feeling%22:%22" + inputArray[3] + "%22}";
+          var xmlhttp = new XMLHttpRequest();
+          xmlhttp.open(get, storeUrl, true);
+          xmlhttp.send();
+          break;
+        }
+      }
     }
 
     //GET ALL EVENTS FROM DATASTORE.
@@ -165,29 +207,27 @@ websiteName<html lang="en">
       //Gets user input and stored password
       var username = document.getElementById("usernameid").value;
       var password = document.getElementById("passwrdid").value;
-      //get stored datastore password
+      //GET STORED PASSWORD FROM DATASTORE AND CHECK
       getUserPassword(username);
-      //checks if input is null
       if (password == emptyString || username == emptyString){
         alert("Password and username cannot be blank");
         return false;
       }
-      //encrypts input using SHA256
+      //INCRYPT PASSWORD USING SHA256
       password = sha256(password);
       var storedpassword = localStorage.getItem(currentPassword);
       console.log("storedpassword: " + storedpassword);
+
       if (localStorage.getItem(currentPassword) === 'null' || localStorage.getItem(currentPassword) == emptyString || localStorage.getItem(currentPassword) == null || localStorage.getItem(currentPassword) == undefined || localStorage.getItem(currentPassword) == "undefined"){
-        console.log("first set password attempt");
         setUserPassword(username, password);
         localStorage.setItem(curLockedStatus, 'locked');
       }
-      else{ //checks if inputted password is the same as the stored password
+      else { //CHECK IF PASSWORD IS THE SAME AS STORED PASSWORD
         console.log(password + emptyString + localStorage.getItem(currentPassword));
         if (password != localStorage.getItem(currentPassword)){
           alert("Password is incorrect");
         }
         else{
-          console.log("second set password attempt");
           setUserPassword(username, emptyString);
           localStorage.setItem(currentPassword, emptyString);
           localStorage.setItem(curLockedStatus, 'unlocked');
@@ -198,19 +238,20 @@ websiteName<html lang="en">
     }
 
     //FIND OUT HOW MANY DAYS THERE ARE IN THE SELECTED MONTH
-    function GetSelectedMonth(month){
-      if (month == month[0] || month == month[2] || month == month[4] || month == month[6] || month == month[7] || month == month[9] || month == month[11] ){
+    function GetSelectedMonth(selectedMonth){
+      var daysInMonth = 0;
+      if (selectedMonth == month[0] || selectedMonth == month[2] || selectedMonth == month[4] || selectedMonth == month[6] || selectedMonth == month[7] || selectedMonth == month[9] || selectedMonth == month[11] ){
         daysInMonth = 31;
       }
-      else if (month == month[1]){
+      else if (selectedMonth == month[1]){
         daysInMonth = 28;
       }
-      else if (month == month[3] || month == month[5] || month == month[8] || month == month[10]){
+      else if (selectedMonth == month[3] || selectedMonth == month[5] || selectedMonth == month[8] || selectedMonth == month[10]){
         daysInMonth = 30;
       }
       else {
         daysInMonth = 30;
-        console.log("The selected month is not set. The number of days in the month is set to 30.");
+        console.log("Error: The selected month is not set. The number of days in the month is set to 30.");
       }
       return daysInMonth;
     }
@@ -239,47 +280,47 @@ websiteName<html lang="en">
           dates[dayCount] = hash + month[0] + dayCountTwo;
         }
         else if (dayCount < 59){ //FEB
-          if (dayCount == 31){dayCountTwo = 1;}
+          if (dayCount == 31){ dayCountTwo = 1;}
           dates[dayCount] = hash + month[1] + dayCountTwo;
         }
         else if (dayCount < 90){ //MAR
-          if (dayCount == 59){dayCountTwo = 1;}
+          if (dayCount == 59){ dayCountTwo = 1;}
           dates[dayCount] = hash + month[2] + dayCountTwo;
         }
         else if (dayCount < 120){ //APR
-          if (dayCount == 90){dayCountTwo = 1;}
+          if (dayCount == 90){ dayCountTwo = 1;}
           dates[dayCount] = hash + month[3] + dayCountTwo;
         }
         else if (dayCount < 151){ //MAY
-          if (dayCount == 120){dayCountTwo = 1;}
+          if (dayCount == 120){ dayCountTwo = 1;}
           dates[dayCount] = hash + month[4] + dayCountTwo;
         }
         else if (dayCount < 181){ //JUN
-          if (dayCount == 151){dayCountTwo = 1;}
+          if (dayCount == 151){ dayCountTwo = 1;}
           dates[dayCount] = hash + month[5] + dayCountTwo;
         }
         else if (dayCount < 212){ //JUL
-          if (dayCount == 181){dayCountTwo = 1;}
+          if (dayCount == 181){ dayCountTwo = 1;}
           dates[dayCount] = hash + month[6] + dayCountTwo;
         }
         else if (dayCount < 243){ //AUG
-          if (dayCount == 212){dayCountTwo = 1;}
+          if (dayCount == 212){ dayCountTwo = 1;}
           dates[dayCount] = hash + month[7] + dayCountTwo;
         }
         else if (dayCount < 273){ //SEP
-          if (dayCount == 243){dayCountTwo = 1;}
+          if (dayCount == 243){ dayCountTwo = 1;}
           dates[dayCount] = hash + month[8] + dayCountTwo;
         }
         else if (dayCount < 304){ //OCT
-          if (dayCount == 273){dayCountTwo = 1;}
+          if (dayCount == 273){ dayCountTwo = 1;}
           dates[dayCount] = hash + month[9] + dayCountTwo;
         }
         else if (dayCount < 334){ //NOV
-          if (dayCount == 304){dayCountTwo = 1;}
+          if (dayCount == 304){ dayCountTwo = 1;}
           dates[dayCount] = hash + month[10] + dayCountTwo;
         }
         else { //DEC
-          if (dayCount == 334){dayCountTwo = 1;}
+          if (dayCount == 334){ dayCountTwo = 1;}
           dates[dayCount] = hash + month[11] + dayCountTwo;
         }
         dayCount++;
@@ -291,10 +332,7 @@ websiteName<html lang="en">
          //SETS BACKGROUND COLOUR TO SELECTED THEME
          var theme = localStorage.getItem(themeColour);
 
-         if (theme == t_pink){
-           document.body.style.backgroundColor = t_darkpink;
-         }
-         else if (theme == t_blue){
+         if (theme == t_blue){
            document.body.style.backgroundColor = t_darkblue;
          }
          else if (theme == t_green){
@@ -303,20 +341,20 @@ websiteName<html lang="en">
          else {
            document.body.style.backgroundColor = t_darkpink;
          }
-        page.querySelector('#enterWebsite').onclick = function() {
 
-          var i = localStorage.getItem(curLockedStatus);
-          if (i == 'unlocked'){ //IF WEBSITE IS UNLOCKED, DIRECT USER TO HOMEPAGE
-            document.querySelector('#firstPage').pushPage(p_viewHomePage, {data: {title: websiteName}});
-          }
-          else if (i == 'locked'){ //IF WEBSITE IS LOCKED, ALERT USER
-            alert("Website is locked.");
-          }
-          else { //SET UNDEFINED LOCKED STATUS TO UNLOCKED
-            localStorage.setItem(curLockedStatus, 'unlocked');
-            document.querySelector('#firstPage').pushPage(p_viewHomePage, {data: {title: websiteName}});
-          }
+           page.querySelector('#enterWebsite').onclick = function() {
 
+            var i = localStorage.getItem(curLockedStatus);
+            if (i == 'unlocked'){ //IF WEBSITE IS UNLOCKED, DIRECT USER TO HOMEPAGE
+              document.querySelector('#firstPage').pushPage(p_HomePage, {data: {title: websiteName}});
+            }
+            else if (i == 'locked'){ //IF WEBSITE IS LOCKED, ALERT USER
+              alert("Website is locked.");
+            }
+            else { //SET UNDEFINED LOCKED STATUS TO UNLOCKED
+              localStorage.setItem(curLockedStatus, 'unlocked');
+              document.querySelector('#firstPage').pushPage(p_HomePage, {data: {title: websiteName}});
+            }
         };
       }
       if (page.id === 'EditDay'){
@@ -382,27 +420,8 @@ websiteName<html lang="en">
 
           var dropdown = page.querySelector('#choose-sel').value;
           var image = emptyString;
-          //CHECKS IF ONLY IMAGE IS SELECTED
-          /*if (input == emptyString && feeling == emptyString && dropdown == '0'){
-            page.querySelector('#dialogBox3').innerHTML = '<div id="hideEditDayDialogBox" class="alert-dialog-mask"></div><div id="hideEditDayDialogBox2" class="alert-dialog"><div id="hideEditDayDialogBox3" class="alert-dialog-container"><div id="hideEditDayDialogBox4" class="alert-dialog-content">You cannot only select an image.</div><div id="hideEditDayDialogBox5" class="alert-dialog-footer"><button id="okButton5" class="alert-dialog-button">Ok</button></div></div></div>';
-            //DISPLAYS HIDDEN DIALOG BOX IF USER ONLY SELECTS AN IMAGE
-            document.querySelector('#hideEditDayDialogBox').style.display = block;
-            document.querySelector('#hideEditDayDialogBox2').style.display = block;
-            document.querySelector('#hideEditDayDialogBox3').style.display = block;
-            document.querySelector('#hideEditDayDialogBox4').style.display = block;
-            document.querySelector('#hideEditDayDialogBox5').style.display = block;
-            document.querySelector('#okButton5').style.display = block;
-            page.querySelector('#okButton5').onclick = function() { //Hides dialog box
-              document.querySelector('#hideEditDayDialogBox').style.display = none;
-              document.querySelector('#hideEditDayDialogBox2').style.display = none;
-              document.querySelector('#hideEditDayDialogBox3').style.display = none;
-              document.querySelector('#hideEditDayDialogBox4').style.display = none;
-              document.querySelector('#hideEditDayDialogBox5').style.display = none;
-              document.querySelector('#okButton5').style.display = none;
-            };
-          }
-          else {
-          */
+
+          if (input != emptyString || feeling != emptyString || dropdown != '0'){
             if (dropdown == '1'){
               image = '<img src="images/heart.png" alt="Heart" class="monthImages" style="height:55px;">';
             }
@@ -431,22 +450,45 @@ websiteName<html lang="en">
               console.log("Error: Image selected does not exist. Image is set to ''");
             }
 
-            var joined = input.concat(comma); // ADDS , TO END OF INPUT
-            joined = joined.concat(store); //ADDS STORE
-            joined = joined.concat(comma); // ADDS ,
-            joined = joined.concat(feeling); // ADDS FEELING
-            joined = joined.concat(comma); // ADDS ,
-            joined = joined.concat(image); // ADDS IMAGES
+            var storeChars = store.split(emptyString);
+            var joinedMonth = emptyString;
+            var joinedDay = emptyString;
+            for (var position = 0; position < storeChars.length; position++)
+            {
+              var letter = storeChars[position];
+              if (!letter.match(/[a-z]/i)) {
+                joinedMonth += letter;
+              }
+              else  {
+                joinedDay += letter;
+              }
+            }
+
+            var joined = joinedMonth.concat(comma);
+            joined = joined.concat(joinedDay);
+            joined = joined.concat(comma);
+            joined = joined.concat(input);
+            joined = joined.concat(comma);
+            joined = joined.concat(feeling);
+            joined = joined.concat(comma);
+            joined = joined.concat(image);
+
+            console.log(JSON.stringify(joined));
+
+            //STORE IN DATASTORE INSTEAD OF STORING HERE
+            storeUserInput(JSON.stringify(joined));
+
             localStorage.setItem(local + store, JSON.stringify(joined));
+          }
 
             // LOADS CALENDER PAGE
-            document.querySelector('#firstPage').pushPage(p_viewMonth);
+            document.querySelector('#firstPage').pushPage(p_Month);
           //}
         };
 
         // NAVIGATES THE PREVIOUS PAGE WHEN THE BACK TOOLBAR BUTTON IS CLICKED
         page.querySelector('#backEvent').onclick = function() {
-          document.querySelector('#firstPage').pushPage(p_viewDay);
+          document.querySelector('#firstPage').pushPage(p_Day);
         };
       };
       if (page.id === 'homePage'){
@@ -456,9 +498,6 @@ websiteName<html lang="en">
         var j = currentDate % 10;
         var k = currentDate % 100;
         var dayEnding = emptyString;
-        //STORES STRING ON HOMEPAGE TO DISPLAY CURECT DATE
-        var todaysDate = "Todays date is the " + dayEnding + " of " + month[currentMonth];
-        page.querySelector('#todaysDate').innerHTML = todaysDate;
 
         if (theme == t_blue){
           document.body.style.backgroundColor = t_darkblue;
@@ -470,23 +509,27 @@ websiteName<html lang="en">
           document.body.style.backgroundColor = t_darkpink;
         }
 
-        //FINDS OUT WHAT ENDING EACH NUMBER SHOULD HAVE E.G. 1ST 2ND 3RD
+        //FINDS OUT WHAT ENDING THE NUMBER SHOULD HAVE E.G. 1ST 2ND 3RD
         if (j == 1 && k != 11) { dayEnding = currentDate + "st"; }
         else if (j == 2 && k != 12) { dayEnding = currentDate + "nd"; }
         else if (j == 3 && k != 13) { dayEnding = currentDate + "rd"; }
         else { dayEnding = currentDate + "th"; }
 
+        //STORES STRING ON HOMEPAGE TO DISPLAY CURECT DATE
+        var todaysDate = "Todays date is the " + dayEnding + " of " + month[currentMonth];
+        page.querySelector('#todaysDate').innerHTML = todaysDate;
+
         // EDIT THEME BUTTON CLICK EVENT
         page.querySelector('#startEditTheme').onclick = function() {
-          document.querySelector('#firstPage').pushPage(p_viewEditTheme, {data: {title: websiteName}});
+          document.querySelector('#firstPage').pushPage(p_EditTheme, {data: {title: websiteName}});
         };
         // VIEW CALENDER BUTTON CLICK EVENT
         page.querySelector('#startCalender').onclick = function() {
-          document.querySelector('#firstPage').pushPage(p_viewMonth, {data: {title: websiteName}});
+          document.querySelector('#firstPage').pushPage(p_Month, {data: {title: websiteName}});
         };
         // EDIT DAY BUTTON CLICK EVENT
         page.querySelector('#startDay').onclick = function() {
-          document.querySelector('#firstPage').pushPage(p_viewDay, {data: {title: websiteName}});
+          document.querySelector('#firstPage').pushPage(p_Day, {data: {title: websiteName}});
         };
         //VIEW DATES BUTTON CLICK EVENT
         page.querySelector('#startViewDates').onclick = function() {
@@ -496,8 +539,8 @@ websiteName<html lang="en">
       }
       if (page.id === 'CalenderDates'){
 
-        var data = localStorage.getItem(storeJSONData);
         var theme = localStorage.getItem(themeColour);
+        var data = localStorage.getItem(storeJSONData);
         var dataArray = data.split(dollarSigns);
         var viewMonths = [];
         var viewDays = [];
@@ -507,26 +550,6 @@ websiteName<html lang="en">
         var uniqueWords = [];
         var joined = emptyString;
         var colour = emptyString;
-
-        //REMOVE REPEATED STRINGS FROM ARRAY
-        $.each(dataArray, function(i, el){
-            if($.inArray(el, uniqueWords) === -1) {
-              uniqueWords.push(el);
-            }
-        });
-        for (var i = 0; i < uniqueWords.length; i++) {
-          joined = joined.concat(dollarSigns);
-          joined = joined.concat(uniqueWords[i]);
-        }
-        dataArray = joined.split(dollarSigns);
-
-        //STORE ALL HARDCODED MONTHS, DAYS AND EVENTS IN ARRAYS
-        for (var i = 0; i < 19; i++) {
-          var split = dataArray[i].split(comma);
-          viewMonths.push(split[0]);
-          viewDays.push(split[1]);
-          viewEvents.push(split[2]);
-        }
 
         //SETS TABLE BACKGROUND COLOUR AND HEADING COLOUR TO THEME
         if (theme == t_pink){
@@ -546,13 +569,59 @@ websiteName<html lang="en">
           tableHeadingColour = t_darkpink;
         }
 
+        //REMOVE REPEATED STRINGS FROM ARRAY OF USER INPUT
+        $.each(dataArray, function(i, el){
+            if($.inArray(el, uniqueWords) === -1) {
+              uniqueWords.push(el);
+            }
+        });
+        for (var i = 0; i < uniqueWords.length; i++) {
+          joined = joined.concat(dollarSigns);
+          joined = joined.concat(uniqueWords[i]);
+        }
+        dataArray = joined.split(dollarSigns);
+
+        //STORE ALL HARDCODED MONTHS, DAYS AND EVENTS IN ARRAYS
+        for (var i = 0; i < dataArray.length; i++) {
+          var split = dataArray[i].split(comma);
+          viewMonths.push(split[0]);
+          viewDays.push(split[1]);
+          viewEvents.push(split[2]);
+        }
+
         //CREATE TABLE TO DISPLAY EVENT DATES
         var table = '<table style="width:100%;">';
         table += '<tr style="background-color: '+ tableBackgroundColour +'; font-size: 18px;"><td style="width:33%; padding-left:20px;">Month</td><td style="width:33%;">Day</td><td style="width:33%; padding-right:20px;">Event</td></tr>';
         for (var i = 0; i < viewMonths.length; i++) {
+
           if (i % 2 === 0){ colour = tableBackgroundColour; }
           else { colour = "white"; }
+
+          //CHECKS IF INPUT IS NOT NULL
           if (viewMonths[i] != emptyString){
+
+            //REPLACE FIRST CHAR OF EVENT INPUT TO A CAPITCAL LETTER
+            var eventCap = Array.from(viewEvents[i]);
+            eventCap[0] = eventCap[0].toUpperCase();
+            var joinedEvent = eventCap.join("");
+            viewEvents[i] = joinedEvent;
+
+            //CHANGE MONTH TO 3 CHARS E.G. DECEMBER BECOMES DEC
+            var monthTemp = "";
+            var monthArray = Array.from(viewMonths[i]);
+            for (var char = 0; char < 3; char++) {
+              monthTemp += monthArray[char];
+            }
+            viewMonths[i] = monthTemp;
+
+            //ADDS CORRECT ENDING TO END OF NUMBER E.G. 3 BECOMES 3RD
+            var j = viewDays[i] % 10;
+            var k = viewDays[i] % 100;
+            if (j == 1 && k != 11) { viewDays[i] = viewDays[i] + "st"; }
+            else if (j == 2 && k != 12) { viewDays[i] = viewDays[i] + "nd"; }
+            else if (j == 3 && k != 13) { viewDays[i] = viewDays[i] + "rd"; }
+            else { viewDays[i] = viewDays[i] + "th"; }
+
             table += '<tr style="background-color: '+ colour +';"><td style="width:20%; padding-left:20px;">'+ viewMonths[i] +'</td><td style="width:20%;">'+ viewDays[i] +'</td><td style="padding-right:20px;">'+ viewEvents[i] +'</td></tr>';
           }
         }
@@ -573,7 +642,6 @@ websiteName<html lang="en">
         var monthSelected = emptyString;
         var count = 1;
         // FINDS OUT THE AMOUNT OF DAYS IN THE SELECTED MONTH
-        var daysInMonth = GetSelectedMonth(month[selectedMonth]);
         var colourCount = 0;
 
         //SETS BACKGROUND COLOUR AND TABLE ELEMENT BACKGROUND COLOUR USING THEME
@@ -592,7 +660,7 @@ websiteName<html lang="en">
 
         // BACK BUTOTN
         page.querySelector('#backEvent').onclick = function() {
-          document.querySelector('#firstPage').pushPage(p_viewHomePage, {data: {month: selectedMonth, }});
+          document.querySelector('#firstPage').pushPage(p_HomePage, {data: {month: selectedMonth, }});
         };
 
         // SETS THE HEADING AS THE CURRENTLY SELECTED MONTH
@@ -604,6 +672,8 @@ websiteName<html lang="en">
           selectedMonth = page.data.month;
           page.querySelector('#displayMonthDay').innerHTML = month[selectedMonth] + " 2018";
         }
+
+        var daysInMonth = GetSelectedMonth(month[selectedMonth]);
 
         // CREATES HEADING OF PAGE
         page.querySelector('#dayList').innerHTML += '<div style="font-size: 25px;" id="displayMonth"></div>';
@@ -728,6 +798,7 @@ websiteName<html lang="en">
           page.querySelector(dates[positionInArray+28]).onclick = function() {
             document.querySelector('#firstPage').pushPage(v_EditDay, {data: {title: month[selectedMonth] + "29"}});
           };
+
           // IF THE MONTH IS JAN, MAR, MAY ETC, IT STOPS STORING NUMBERS AFTER 30
           if (month[selectedMonth] == month[0] || month[selectedMonth] == month[2] || month[selectedMonth] == month[4] || month[selectedMonth] == month[6] || month[selectedMonth] == month[7] || month[selectedMonth] == month[9] || month[selectedMonth] == month[11] )
           {
@@ -745,7 +816,7 @@ websiteName<html lang="en">
           if (selectedMonth != 0){
             selectedMonth--;
             // STORES THE SELECTED MONTH I.E MARCH IN VARIABLE TO BE USED WHEN CODE IS RUN AGAIN
-            document.querySelector('#firstPage').pushPage(p_viewDay, {data: {month: selectedMonth, title: websiteName}});
+            document.querySelector('#firstPage').pushPage(p_Day, {data: {month: selectedMonth, title: websiteName}});
           }
           else {
             page.querySelector('#dialogBox2').innerHTML = '<div id="hideDayDialogBox" class="alert-dialog-mask"></div><div id="hideDayDialogBox2" class="alert-dialog"><div id="hideDayDialogBox3" class="alert-dialog-container"><div id="hideDayDialogBox4" class="alert-dialog-content">You cannot go back,<br>January is the first month.</div><div id="hideDayDialogBox5" class="alert-dialog-footer"><button id="okButton3" class="alert-dialog-button">Ok</button></div></div></div>';
@@ -772,7 +843,7 @@ websiteName<html lang="en">
           if (selectedMonth != 11){
             selectedMonth++;
             // STORES THE SELECTED MONTH I.E MARCH IN VARIABLE TO BE USED WHEN CODE IS RUN AGAIN
-            document.querySelector('#firstPage').pushPage(p_viewDay, {data: {month: selectedMonth, title: websiteName}});
+            document.querySelector('#firstPage').pushPage(p_Day, {data: {month: selectedMonth, title: websiteName}});
           }
           else {
             page.querySelector('#dialogBox2').innerHTML = '<div id="hideDayDialogBox6" class="alert-dialog-mask"></div><div id="hideDayDialogBox7" class="alert-dialog"><div id="hideDayDialogBox8" class="alert-dialog-container"><div id="hideDayDialogBox9" class="alert-dialog-content">You cannot go back,<br>January is the first month.</div><div id="hideDayDialogBox10" class="alert-dialog-footer"><button id="okButton4" class="alert-dialog-button">Ok</button></div></div></div>';
@@ -798,11 +869,11 @@ websiteName<html lang="en">
       if (page.id === 'Month'){
 
         page.querySelector('ons-toolbar .center').innerHTML = websiteName;
+
         var theme = localStorage.getItem(themeColour);
         var columns = localStorage.getItem(columns);
         var selectedMonth = currentMonth;
         var count = 1;
-        var daysInMonth = GetSelectedMonth(month[selectedMonth]);
         var colourCount = 0;
         var colour = emptyString;
         var elementPosition = 0;
@@ -813,14 +884,9 @@ websiteName<html lang="en">
         var noOfColumns = 3;
         var percentage = 33;
         var weekday = 0;
-        var
 
         //SETS BACKGROUND COLOUR AND TABLE ELEMENT BACKGROUND COLOUR USING THEME
-        if (theme == t_pink){
-          selectedColour = t_lightpink;
-          document.body.style.backgroundColor = t_darkpink;
-        }
-        else if (theme == t_blue){
+        if (theme == t_blue){
           selectedColour = t_lightblue;
           document.body.style.backgroundColor = t_darkblue;
         }
@@ -838,7 +904,7 @@ websiteName<html lang="en">
           if (selectedMonth != 0){
             selectedMonth--;
             //STORES SELECTED MONTH IN VARIABLE TO BE PASSED AND USED WHEN CODE IS RERUN
-            document.querySelector('#firstPage').pushPage(p_viewMonth, {data: {month: selectedMonth, title: websiteName, }});
+            document.querySelector('#firstPage').pushPage(p_Month, {data: {month: selectedMonth, title: websiteName, }});
           }
           else {
             page.querySelector('#dialogBox').innerHTML = '<div id="hideDialogBox" class="alert-dialog-mask"></div><div id="hideDialogBox2" class="alert-dialog"><div id="hideDialogBox3" class="alert-dialog-container"><div id="hideDialogBox4" class="alert-dialog-content">You cannot go back,<br>January is the first month.</div><div id="hideDialogBox5" class="alert-dialog-footer"><button id="okButton" class="alert-dialog-button">Ok</button></div></div></div>';
@@ -866,7 +932,7 @@ websiteName<html lang="en">
           if (selectedMonth != 11){
             selectedMonth++;
             //STORES SELECTED MONTH IN VARIABLE TO BE PASSED AND USED WHEN CODE IS RERUN
-            document.querySelector('#firstPage').pushPage(p_viewMonth, {data: {month: selectedMonth, title: websiteName, }});
+            document.querySelector('#firstPage').pushPage(p_Month, {data: {month: selectedMonth, title: websiteName, }});
           }
           else {
             page.querySelector('#dialogBox').innerHTML = '<div id="hideDialogBox6" class="alert-dialog-mask"></div><div id="hideDialogBox7" class="alert-dialog"><div id="hideDialogBox8" class="alert-dialog-container"><div id="hideDialogBox9" class="alert-dialog-content">You cannot go forward,<br>December is the last month.</div><div id="hideDialogBox10" class="alert-dialog-footer"><button id="okButton2" class="alert-dialog-button">Ok</button></div></div></div>';
@@ -891,18 +957,20 @@ websiteName<html lang="en">
 
         //BACK BUTTON
         page.querySelector('#backEvent').onclick = function() {
-          document.querySelector('#firstPage').pushPage(p_viewHomePage, {data: {month: selectedMonth, }});
+          document.querySelector('#firstPage').pushPage(p_HomePage, {data: {month: selectedMonth, }});
         };
 
         // SETS HEADING TO CURRENTLY SELECTED MONTH
         if (page.data.month === undefined){
           page.querySelector('#displayMonth').innerHTML = month[selectedMonth] + " 2018";
         }
-        else {
-          // sets the selectedMonth variable to the current month
+        else { // sets the selectedMonth variable to the current month
           selectedMonth = page.data.month;
           page.querySelector('#displayMonth').innerHTML = month[selectedMonth] + " 2018";
         }
+
+        //console.log("GetSelectedMonth : " + month[selectedMonth]);
+        var daysInMonth = GetSelectedMonth(month[selectedMonth]);
 
         // FIND OUT WHAT DAY THE SELECTED MONTH SHOULD START ON
         if (selectedMonth == 0 || selectedMonth == 9) { weekDay = 0; }
@@ -912,9 +980,7 @@ websiteName<html lang="en">
         else if (selectedMonth == 5) { weekDay = 4; }
         else if (selectedMonth == 7) { weekDay = 2; }
         else if (selectedMonth == 8 || selectedMonth == 11){ weekDay = 5; }
-        else {
-          console.log("Error: selected month is not specified. Weekday is set to Monday.");
-        }
+        else console.log("Error: selected month is not specified. Weekday is set to Monday.");
 
         //SET THE COLUMN NUMBER AND WIDTH DEPENDING ON THE USERS SELECTION
         if (columns == "5"){
@@ -926,8 +992,155 @@ websiteName<html lang="en">
           percentage = 33;
         }
 
+        var viewMonths = [];
+        var viewDays = [];
+        var viewEvents = [];
+        var data = localStorage.getItem(storeJSONData);
+        var dataArray = data.split(dollarSigns);
+        var uniqueWords = [];
+        var joined = emptyString;
+
+        //REMOVE REPEATED STRINGS FROM ARRAY
+        $.each(dataArray, function(i, el){
+            if($.inArray(el, uniqueWords) === -1) {
+              uniqueWords.push(el);
+            }
+        });
+        for (var i = 0; i < uniqueWords.length; i++) {
+          joined = joined.concat(dollarSigns);
+          joined = joined.concat(uniqueWords[i]);
+        }
+        dataArray = joined.split(dollarSigns);
+
+        //STORE ALL HARDCODED MONTHS, DAYS AND EVENTS IN ARRAYS
+        for (var i = 20; i < dataArray.length; i++) {
+          var split = dataArray[i].split(comma);
+
+          if (split[0] == "Jan") split[0] = month[0];
+          else if (split[0] == "Feb") split[0] = month[1];
+          else if (split[0] == "Mar") split[0] = month[2];
+          else if (split[0] == "Apr") split[0] = month[3];
+          else if (split[0] == "May") split[0] = month[4];
+          else if (split[0] == "Jun") split[0] = month[5];
+          else if (split[0] == "Jul") split[0] = month[6];
+          else if (split[0] == "Aug") split[0] = month[7];
+          else if (split[0] == "Sep") split[0] = month[8];
+          else if (split[0] == "Oct") split[0] = month[9];
+          else if (split[0] == "Nov") split[0] = month[10];
+          else if (split[0] == "Dec") split[0] = month[11];
+
+          viewMonths.push(split[0]);
+          viewDays.push(split[1].replace(/[^0-9]/g, ""));
+          viewEvents.push(split[2]);
+        }
+
+        for (var i = 0; i < viewMonths.length; i++) {
+          for (var j = 0; j < viewMonths.length; j++) {
+            if (viewDays[j] > viewDays[j+1]){
+              var temp = viewDays[j];
+              viewDays[j] = viewDays[j+1];
+              viewDays[j+1] = temp;
+
+              temp = viewMonths[j];
+              viewMonths[j] = viewMonths[j+1];
+              viewMonths[j+1] = temp;
+
+              temp = viewEvents[j];
+              viewEvents[j] = viewEvents[j+1];
+              viewEvents[j+1] = temp;
+            }
+          }
+        }
+
+        console.log("Days sorted: " + viewDays + " : " + viewMonths);
+
+        var tempArray = [];
+        for (var i = 0; i < viewMonths.length; i++) {
+          if (viewMonths[i] == month[0]) tempArray.push(0);
+          else if (viewMonths[i] == month[1]) tempArray.push(1);
+          else if (viewMonths[i] == month[2]) tempArray.push(2);
+          else if (viewMonths[i] == month[3]) tempArray.push(3);
+          else if (viewMonths[i] == month[4]) tempArray.push(4);
+          else if (viewMonths[i] == month[5]) tempArray.push(5);
+          else if (viewMonths[i] == month[6]) tempArray.push(6);
+          else if (viewMonths[i] == month[7]) tempArray.push(7);
+          else if (viewMonths[i] == month[8]) tempArray.push(8);
+          else if (viewMonths[i] == month[9]) tempArray.push(9);
+          else if (viewMonths[i] == month[10]) tempArray.push(10);
+          else if (viewMonths[i] == month[11]) tempArray.push(11);
+        }
+
+        for (var i = 0; i < viewMonths.length; i++) {
+          for (var j = 0; j < viewMonths.length; j++) {
+
+            if (tempArray[j] > tempArray[j+1]){
+              var temp = viewDays[j];
+              viewDays[j] = viewDays[j+1];
+              viewDays[j+1] = temp;
+
+              temp = viewMonths[j];
+              viewMonths[j] = viewMonths[j+1];
+              viewMonths[j+1] = temp;
+
+              temp = tempArray[j];
+              tempArray[j] = tempArray[j+1];
+              tempArray[j+1] = temp;
+
+              temp = viewEvents[j];
+              viewEvents[j] = viewEvents[j+1];
+              viewEvents[j+1] = temp;
+            }
+
+          }
+        }
+
+        console.log("Months sorted: " + viewDays + " : " + viewMonths);
+
         //CREATES CALENDER TABLE
         var table = '<table style="width: 100%;border-collapse: collapse; margin-top: 20px; border-bottom: 1px solid white;" ><div style="font-size: 50px;" id="displayMonth"></div>';
+
+        var eventCounter = 0;
+
+        var inputMonthInt = 0;
+
+        var inputMonth = viewMonths[eventCounter];
+        //CHECKS WHAT NUMBER THE SELECTED MONTH IS I.E. JAN IS 0, FEB IS 1
+        if(inputMonth == month[0]){inputMonthInt = 0; }
+        else if(inputMonth == month[1]){inputMonthInt = 1;}
+        else if(inputMonth == month[2]){inputMonthInt = 2;}
+        else if(inputMonth == month[3]){inputMonthInt = 3;}
+        else if(inputMonth == month[4]){inputMonthInt = 4;}
+        else if(inputMonth == month[5]){inputMonthInt = 5;}
+        else if(inputMonth == month[6]){inputMonthInt = 6;}
+        else if(inputMonth == month[7]){inputMonthInt = 7;}
+        else if(inputMonth == month[8]){inputMonthInt = 8;}
+        else if(inputMonth == month[9]){inputMonthInt = 9;}
+        else if(inputMonth == month[10]){inputMonthInt = 10;}
+        else if(inputMonth == month[11]){inputMonthInt = 11;}
+        else console.log("1Error: month is not selected");
+
+        while (inputMonthInt != selectedMonth){
+          eventCounter++;
+          var inputMonth = viewMonths[eventCounter];
+          //CHECKS WHAT NUMBER THE SELECTED MONTH IS I.E. JAN IS 0, FEB IS 1
+          if(inputMonth == month[0]){inputMonthInt = 0; }
+          else if(inputMonth == month[1]){inputMonthInt = 1;}
+          else if(inputMonth == month[2]){inputMonthInt = 2;}
+          else if(inputMonth == month[3]){inputMonthInt = 3;}
+          else if(inputMonth == month[4]){inputMonthInt = 4;}
+          else if(inputMonth == month[5]){inputMonthInt = 5;}
+          else if(inputMonth == month[6]){inputMonthInt = 6;}
+          else if(inputMonth == month[7]){inputMonthInt = 7;}
+          else if(inputMonth == month[8]){inputMonthInt = 8;}
+          else if(inputMonth == month[9]){inputMonthInt = 9;}
+          else if(inputMonth == month[10]){inputMonthInt = 10;}
+          else if(inputMonth == month[11]){inputMonthInt = 11;}
+          else console.log("2Error: month is not selected");
+
+          if (inputMonth == undefined) break;
+        }
+
+        alert(inputMonthInt);
 
         for (var i = 0; i < 11; i++) {
           table += '<tr>';
@@ -937,19 +1150,18 @@ websiteName<html lang="en">
             var jsonEventString = localStorage.getItem(storeJSONEvents);
             var jsonEventArray = jsonEventString.toUpperCase().split(dollarSigns);
             var uniqueWords = [];
-            var inputMonthInt = 0;
             var todaysEvent = emptyString;
             var todaysImage = emptyString;
             var todaysFeelings = emptyString;
             var todaysPrint = emptyString;
-            var capitcalNone = "NONE";
+            var capitalNone = "NONE";
 
             // STOPS CREATING ELEMENTS WHEN THERE ARE NO MORE DAYS IN THE MONTH
             if (count > daysInMonth){ break; }
 
             table += '<td style="padding:0px; width:' + percentage + '%;">';
 
-            SETS THE SELECTEDCOLOUR AS EVERY SECOND ELEMENTS BACKGROUNDCOLOR
+            //SETS THE SELECTEDCOLOUR AS EVERY SECOND ELEMENTS BACKGROUNDCOLOR
             colourCount++;
             if (colourCount % 2 === 0){colour = selectedColour;}
             else {colour = "white";}
@@ -962,69 +1174,28 @@ websiteName<html lang="en">
             });
             jsonEventArray = uniqueWords;
 
-            //READ STORED USER INPUT FROM LOCAL STORAGE
-            if (localStorage.getItem(local + store) != null) {
-                var retrievedData = localStorage.getItem(local + store);
-                var eventSplit = retrievedData.split(comma);
-                eventSplit[0] = eventSplit[0].substring(1);
-                if (eventSplit[3] != undefined){
-                  eventSplit[3] = eventSplit[3].substring(0, eventSplit[3].length - 1);
-                  eventSplit[3] = eventSplit[3].replace(/\\/g, emptyString);
-                }
-                passDay = eventSplit[1];
-                localStorage.setItem(currentDay, passDay);
-                inputDay = eventSplit[1].replace(/[^0-9]/g, emptyString);
-            }
-            else {
-              localStorage.setItem(currentDay, emptyString);
-            }
-
-            //CHECKS WHAT NUMBER THE SELECTED MONTH IS I.E. JAN IS 0, FEB IS 1
-            if(month[selectedMonth] == month[0]){inputMonthInt = 0;}
-            else if(month[selectedMonth] == month[1]){inputMonthInt = 1;}
-            else if(month[selectedMonth] == month[2]){inputMonthInt = 2;}
-            else if(month[selectedMonth] == month[3]){inputMonthInt = 3;}
-            else if(month[selectedMonth] == month[4]){inputMonthInt = 4;}
-            else if(month[selectedMonth] == month[5]){inputMonthInt = 5;}
-            else if(month[selectedMonth] == month[6]){inputMonthInt = 6;}
-            else if(month[selectedMonth] == month[7]){inputMonthInt = 7;}
-            else if(month[selectedMonth] == month[8]){inputMonthInt = 8;}
-            else if(month[selectedMonth] == month[9]){inputMonthInt = 9;}
-            else if(month[selectedMonth] == month[10]){inputMonthInt = 10;}
-            else if(month[selectedMonth] == month[11]){inputMonthInt = 11;}
-            else { console.log("Error: month is not selected"); }
+            var inputDay = viewDays[eventCounter];
+            var inputEvent = viewEvents[eventCounter];
 
             //CHECKS IF EVENT IN ARRAY EXISTS FOR THIS DAY AND PRINTS DATA IF IT DOES
+            
             if (count == inputDay && selectedMonth == inputMonthInt){
+              eventCounter++;
+              //alert(inputDay + "." + inputMonth + "." + inputEvent);
               //PRINTS EVENTS,FEELINGS AND IMAGE IF NOT NULL. OTHERWISE PRINTS DEFAULT
-              if (eventSplit[0] != emptyString)
+              if (inputEvent != emptyString)
               {
-                todaysEvent = eventSplit[0].toUpperCase();
+                todaysEvent = inputEvent.toUpperCase();
               }
               else
               {
-                todaysEvent = capitcalNone;
-              }
-
-              if (eventSplit[2] != emptyString)
-              {
-                todaysFeelings = '<br>FEELING:<br>' + eventSplit[2].toUpperCase();
-              }
-              else
-              { //prints nothing
-                todaysFeelings = emptyString;
-              }
-              if (eventSplit[4] != undefined){
-                todaysImage = eventSplit[4];
-              }
-              else {
-                todaysImage = emptyString;
+                todaysEvent = capitalNone;
               }
 
             } // changes what's printed in each element depending on what day it is
             else if (count == currentDate && selectedMonth == currentMonth){
               todaysPrint = "TODAY";
-              todaysEvent = capitcalNone;
+              todaysEvent = capitalNone;
             }
             else if (count == 1 && selectedMonth == 0){
               todaysEvent = jsonEventArray[0]; //new years day
@@ -1097,7 +1268,7 @@ websiteName<html lang="en">
               todaysImage = '<img src="images/firework.png" alt="Firework" class="monthImages" style="height:63px;">';
             }
             else  {
-              todaysEvent = capitcalNone;
+              todaysEvent = capitalNone;
             }
 
             localStorage.setItem(currentDay, passDay);
@@ -1162,7 +1333,7 @@ websiteName<html lang="en">
         }
         else {
           page.querySelector('#s1').checked = true;
-          console.log("Error: Number of columns is not specified. Set the default number of columns.");
+          console.log("Number of columns is not specified. Set the default number of columns.");
         }
 
         //PREVIEW THE BACKGROUND COLOUR AFTER CLICKING THEME RADIO BUTTON
@@ -1184,12 +1355,12 @@ websiteName<html lang="en">
 
           localStorage.setItem(themeColour, theme);
           localStorage.setItem(columns, columns);
-          document.querySelector('#firstPage').pushPage(p_viewMonth);
+          document.querySelector('#firstPage').pushPage(p_Month);
         }
 
         //BACK BUTTON
         page.querySelector('#backEvent').onclick = function() {
-          document.querySelector('#firstPage').pushPage(p_viewHomePage);
+          document.querySelector('#firstPage').pushPage(p_HomePage);
         };
 
       };
@@ -1210,7 +1381,7 @@ websiteName<html lang="en">
   </script>
 
   </head>
-  <body onload="storeJSONData()">
+  <body onload="storeData()">
 
   <ons-navigator id="firstPage" page="lock.html"></ons-navigator>
 
@@ -1274,7 +1445,7 @@ websiteName<html lang="en">
         <div style="text-align: center; font-size: 16px; padding: 0px 30px;">
           <br>
             <headingStyle style="font-size: 16px;" id="todaysDate"></headingStyle><br><br>
-          Keep track of upcoming events in Melbourne and Australia using this online<br>easy to use web-based Calender.
+            Keep track of upcoming events in Melbourne and Australia using this online<br>easy to use web-based Calender.
         </div>
       </div>
       </p>
@@ -1337,7 +1508,7 @@ websiteName<html lang="en">
       <p style="padding-left:5px; padding-right:5px;">
         <div style="padding-top: 20px; padding-left: 20px; text-align:center;">
           <!-- Page heading -->
-          <headingStyle id="displayMonthDay" style="font-size: 50px;"></headingStyle>
+          <headingStyle id="displayMonthDay" style="font-size: 35px;"></headingStyle>
         </div>
       </p>
       <!-- Displays a list of days in the current selected month -->
@@ -1356,7 +1527,7 @@ websiteName<html lang="en">
       <p style="padding-left:5px; padding-right:5px;">
         <div style="padding-top: 20px; padding-left: 20px; text-align:center;">
           <!-- Page heading -->
-          <headingStyle id="editDayHeading" style="font-size: 50px;"></headingStyle>
+          <headingStyle id="editDayHeading" style="font-size: 35px;"></headingStyle>
         </div>
       </p>
       <!-- Input deviced stored in a form so all data is transfered to storeCalenderEdit.php when the form is submitted-->
@@ -1374,7 +1545,7 @@ websiteName<html lang="en">
       <p style="padding-left:5px; padding-right:5px;">
         <div style="padding-top: 20px; padding-left: 20px; text-align:center;">
           <!-- Page heading -->
-          <headingStyle id="editThemeHeading" style="font-size: 50px;">Edit Theme</headingStyle><br><br>
+          <headingStyle id="editThemeHeading" style="font-size: 35px;">Edit Theme</headingStyle><br><br>
         </div>
       </p>
       <!-- Input deviced stored in a form so all data is transfered to storeCalenderEdit.php when the form is submitted-->
